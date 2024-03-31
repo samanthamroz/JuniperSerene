@@ -27,7 +27,7 @@ public class BattleInitializer : MonoBehaviour
         player2.GetComponent<CharacterCombatBehavior>().InitializeFromDebugPrefab(300, new Color(0,1,1), "Cyan");
 
         GameObject player3 = Instantiate(playerPrefabs[0]);
-        bm.NewCharacterPosition(player3, false);
+        bm.NewCharacterPosition(player3, true);
         player3.GetComponent<SpriteRenderer>().color = new Color(1,0,1);
         player3.GetComponent<CharacterCombatBehavior>().InitializeFromDebugPrefab(300, new Color(1,0,1), "Pink");
 

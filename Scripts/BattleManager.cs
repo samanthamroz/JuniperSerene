@@ -67,9 +67,10 @@ public class BattleManager : MonoBehaviour
                     character.GetComponent<DoubleLinkedList>().next = playersInFront[0].gameObject;
                     character.GetComponent<DoubleLinkedList>().prev = playersInFront[playersInFront.Count - 1].gameObject;
                 }
-                playersInFront.Add(character.GetComponent<CharacterCombatBehavior>());
                 character.transform.parent = playersFront.transform;
-                character.transform.localPosition = new Vector3(((playersInFront.Count - 1) * 1.5f),0,0);
+                character.transform.localPosition = new Vector3((playersInFront.Count * 1.5f),0,0);
+
+                playersInFront.Add(character.GetComponent<CharacterCombatBehavior>());
             } else {
                 if (playersInBack.Count == 0) {
                     character.GetComponent<DoubleLinkedList>().next = character;
@@ -78,9 +79,10 @@ public class BattleManager : MonoBehaviour
                     character.GetComponent<DoubleLinkedList>().next = playersInBack[0].gameObject;
                     character.GetComponent<DoubleLinkedList>().prev = playersInBack[playersInBack.Count - 1].gameObject;
                 }
-                playersInBack.Add(character.GetComponent<CharacterCombatBehavior>());
                 character.transform.SetParent(playersBack.transform, true);
-                character.transform.localPosition = new Vector3(((playersInBack.Count - 1) * 1.5f),0,0);
+                character.transform.localPosition = new Vector3((playersInBack.Count * 1.5f),0,0);
+
+                playersInBack.Add(character.GetComponent<CharacterCombatBehavior>());
             }
         } else {
             if (isGoingToFront) {
@@ -91,9 +93,10 @@ public class BattleManager : MonoBehaviour
                     character.GetComponent<DoubleLinkedList>().next = enemiesInFront[0].gameObject;
                     character.GetComponent<DoubleLinkedList>().prev = enemiesInFront[enemiesInFront.Count - 1].gameObject;
                 }
-                enemiesInFront.Add(character.GetComponent<CharacterCombatBehavior>());
                 character.transform.SetParent(enemiesFront.transform, true);
-                character.transform.localPosition = new Vector3(((enemiesInFront.Count - 1) * 1.5f),0,0);
+                character.transform.localPosition = new Vector3((enemiesInFront.Count * 1.5f),0,0);
+
+                enemiesInFront.Add(character.GetComponent<CharacterCombatBehavior>());
             } else {
                 if (enemiesInBack.Count == 0) {
                     character.GetComponent<DoubleLinkedList>().next = character;
@@ -102,20 +105,61 @@ public class BattleManager : MonoBehaviour
                     character.GetComponent<DoubleLinkedList>().next = enemiesInBack[0].gameObject;
                     character.GetComponent<DoubleLinkedList>().prev = enemiesInBack[enemiesInBack.Count - 1].gameObject;
                 }
-                enemiesInBack.Add(character.GetComponent<CharacterCombatBehavior>());
                 character.transform.SetParent(enemiesBack.transform, true);
-                character.transform.localPosition = new Vector3(((enemiesInBack.Count - 1) * 1.5f),0,0);
+                character.transform.localPosition = new Vector3((enemiesInBack.Count * 1.5f),0,0);
+                
+                enemiesInBack.Add(character.GetComponent<CharacterCombatBehavior>());
             }
         }
         character.transform.localRotation = Quaternion.Euler(0,0,0);
         character.transform.localScale = new Vector3(1,1,1);
     }
 
-    public void UpdateCharacterPosition(GameObject character, bool isGoingToFront) {
-        //remove old character positioin (i.e. shift all affected characters "left" both in position and in linked list)
-        
+    private void UpdateCharacterPosition(GameObject character, bool isGoingToFront) {
+        CharacterCombatBehavior characterCCB =  character.GetComponent<CharacterCombatBehavior>();
+        List<GameObject> shiftLeft = new List<GameObject>();
+        int count = 1;
+
+        if (characterCCB.isPlayable && !isGoingToFront) {
+            if (playersInFront.IndexOf(characterCCB) != playersInFront.Count - 1) {
+                for (int i = (playersInFront.IndexOf(characterCCB) + 1); i < playersInFront.Count; i++) {
+                    shiftLeft.Add(playersInFront[i].gameObject);
+                    count++;
+                }
+            }
+            playersInFront.RemoveRange(playersInFront.IndexOf(characterCCB), count);
+        } else if (characterCCB.isPlayable && isGoingToFront) {
+            if (playersInBack.IndexOf(characterCCB) != playersInBack.Count - 1) {
+                for (int i = (playersInBack.IndexOf(characterCCB) + 1); i < playersInBack.Count; i++) {
+                    shiftLeft.Add(playersInBack[i].gameObject);
+                    playersInBack.RemoveAt(i);
+                }
+            }
+            playersInBack.RemoveRange(playersInBack.IndexOf(characterCCB), count);
+        } else if (!characterCCB.isPlayable && !isGoingToFront) {
+            if (enemiesInFront.IndexOf(characterCCB) != enemiesInFront.Count - 1) {
+                for (int i = (enemiesInFront.IndexOf(characterCCB) + 1); i < enemiesInFront.Count; i++) {
+                    shiftLeft.Add(enemiesInFront[i].gameObject);
+                    enemiesInFront.RemoveAt(i);
+                }
+            }
+            enemiesInFront.RemoveRange(enemiesInFront.IndexOf(characterCCB), count);
+        } else if (!characterCCB.isPlayable && isGoingToFront) {
+            if (enemiesInBack.IndexOf(characterCCB) != enemiesInBack.Count - 1) {
+                for (int i = (enemiesInBack.IndexOf(characterCCB) + 1); i < enemiesInBack.Count; i++) {
+                    shiftLeft.Add(enemiesInBack[i].gameObject);
+                    enemiesInBack.RemoveAt(i);
+                }
+            }
+            enemiesInBack.RemoveRange(enemiesInBack.IndexOf(characterCCB), count);
+        } else {
+            throw new Exception("'unreachable' error in UpdateCharacterPosition method");
+        }
 
         NewCharacterPosition(character, isGoingToFront);
+        foreach (GameObject shiftCharacter in shiftLeft) {
+            NewCharacterPosition(shiftCharacter, !isGoingToFront);
+        }
     }
     /*
     Turn Management:
@@ -287,7 +331,7 @@ public class BattleManager : MonoBehaviour
 
         CharacterCombatBehavior chosenPlayer = playersInFront[UnityEngine.Random.Range(0, playersInFront.Count)];
         int rand = UnityEngine.Random.Range(1, 11);
-        if (rand >= 9) {
+        if (rand >= 0) {
             bui.ChangeActionText("Move");
             success = Move();
         }
@@ -315,22 +359,13 @@ public class BattleManager : MonoBehaviour
     }
     private bool Move(CharacterCombatBehavior moving) {
         bool success = true;
-        if (allPlayers.Contains(moving)) {
-            if (playersInFront.Contains(moving) && playersInFront.Count > 1) {
-                moving.transform.SetParent(playersBack.transform, false);
-            } else if (playersInBack.Contains(moving)) {
-                moving.transform.SetParent(playersFront.transform, false);
-            } else {
-                success = false;
-            }
+        if ((playersInFront.Contains(moving) && playersInFront.Count > 1) ||
+                playersInBack.Contains(moving) ||
+                (enemiesInFront.Contains(moving) && enemiesInFront.Count > 1) ||
+                (enemiesInBack.Contains(moving))) {
+            UpdateCharacterPosition(moving.gameObject, (enemiesInBack.Contains(moving)) || playersInBack.Contains(moving));
         } else {
-            if (enemiesInFront.Contains(moving) && enemiesInFront.Count > 1) {
-                moving.transform.SetParent(enemiesBack.transform, false);
-            } else if (enemiesInBack.Contains(moving)) {
-                moving.transform.SetParent(enemiesFront.transform, false);
-            } else {
-                success = false;
-            }
+            success = false;
         }
         return success;
     }
