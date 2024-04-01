@@ -98,10 +98,10 @@ public class BattleController : MonoBehaviour
             bm.DoAction(actionCode, selectedTarget);
 
             //go back to action menu mode
-            selectedTarget = null;
             if (selectedTargetArrow != null) {
                 selectedTargetArrow.SetActive(false);
             }
+            selectedTarget = null;
             selectedAction.GetComponent<Image>().color = selectionColor;
             isInActionMenu = true;
         }

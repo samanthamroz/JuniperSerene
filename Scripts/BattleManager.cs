@@ -132,7 +132,7 @@ public class BattleManager : MonoBehaviour
             if (playersInBack.IndexOf(characterCCB) != playersInBack.Count - 1) {
                 for (int i = (playersInBack.IndexOf(characterCCB) + 1); i < playersInBack.Count; i++) {
                     shiftLeft.Add(playersInBack[i].gameObject);
-                    playersInBack.RemoveAt(i);
+                    count++;
                 }
             }
             playersInBack.RemoveRange(playersInBack.IndexOf(characterCCB), count);
@@ -140,7 +140,7 @@ public class BattleManager : MonoBehaviour
             if (enemiesInFront.IndexOf(characterCCB) != enemiesInFront.Count - 1) {
                 for (int i = (enemiesInFront.IndexOf(characterCCB) + 1); i < enemiesInFront.Count; i++) {
                     shiftLeft.Add(enemiesInFront[i].gameObject);
-                    enemiesInFront.RemoveAt(i);
+                    count++;
                 }
             }
             enemiesInFront.RemoveRange(enemiesInFront.IndexOf(characterCCB), count);
@@ -148,7 +148,7 @@ public class BattleManager : MonoBehaviour
             if (enemiesInBack.IndexOf(characterCCB) != enemiesInBack.Count - 1) {
                 for (int i = (enemiesInBack.IndexOf(characterCCB) + 1); i < enemiesInBack.Count; i++) {
                     shiftLeft.Add(enemiesInBack[i].gameObject);
-                    enemiesInBack.RemoveAt(i);
+                    count++;
                 }
             }
             enemiesInBack.RemoveRange(enemiesInBack.IndexOf(characterCCB), count);
@@ -299,10 +299,11 @@ public class BattleManager : MonoBehaviour
         return targets;
     }
     public void DoAction(float actionCode) {
+        bool success = true;
         switch (actionCode) {
             case -1:
                 bui.ChangeActionText("Move");
-                Move();
+                success = Move();
                 break;
             case 99:
                 bui.ChangeActionText("Surrender");
@@ -311,8 +312,9 @@ public class BattleManager : MonoBehaviour
             default:
                 throw new Exception("Action code needs target");
         }
-        
-        EndCurrentAction();
+        if (success) {
+            EndCurrentAction();
+        }
     }
     public void DoAction(float actionCode, GameObject target) {
         switch (actionCode) {
@@ -331,7 +333,7 @@ public class BattleManager : MonoBehaviour
 
         CharacterCombatBehavior chosenPlayer = playersInFront[UnityEngine.Random.Range(0, playersInFront.Count)];
         int rand = UnityEngine.Random.Range(1, 11);
-        if (rand >= 0) {
+        if (rand > 8) {
             bui.ChangeActionText("Move");
             success = Move();
         }

@@ -15,7 +15,7 @@ public class BattleAnimations : MonoBehaviour
     }
 
     public int TurnEnd(GameObject character) {
-        LeanTween.cancel(character);
+        //LeanTween.cancel(character);
         LeanTween.scale(character, new Vector3(1f,1f,1f), .5f);
         return 1;
     }
@@ -23,12 +23,11 @@ public class BattleAnimations : MonoBehaviour
     public float Attack(GameObject character) {
         LeanTween.cancel(character);
         LeanTween.scale(character, new Vector3(1.1f,1.1f,1.1f), .5f);
-        if (character.GetComponent<CharacterCombatBehavior>().isPlayable) {
-            Debug.Log("attacking");
-            LeanTween.moveLocal(character, new Vector2(-50f,0f),.25f).setLoopClamp();
-        } else {
-            LeanTween.moveLocal(character, new Vector2(50f,0f),.25f).setLoopClamp();
-        }
-        return .25f;
+        LeanTween.moveLocal(character, new Vector3(
+            (character.transform.localPosition.x - 0.5f),
+            (character.transform.localPosition.y - 0.5f),
+            0f), .25f).setRepeat(2).setLoopPingPong();;
+
+        return 1f;
     }
 }
