@@ -26,7 +26,7 @@ public class BattleAnimations : MonoBehaviour
         LeanTween.moveLocal(character, new Vector3(
             (character.transform.localPosition.x - 0.5f),
             (character.transform.localPosition.y - 0.5f),
-            0f), .25f).setRepeat(2).setLoopPingPong();;
+            0f), .25f).setRepeat(2).setLoopPingPong();
 
         return 1f;
     }

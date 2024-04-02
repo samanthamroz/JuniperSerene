@@ -229,7 +229,8 @@ public class BattleManager : MonoBehaviour
             Debug.Log("players won");
         } else {
             int turnEndDelay = ba.TurnEnd(curr.gameObject);
-            Invoke(nameof(RemoveFromFrontOfCurrentTurnUI), turnEndDelay);
+            bui.Invoke("RemoveFromFrontOfCurrentTurnUI", turnEndDelay);
+            bui.Invoke("RemoveActionText", turnEndDelay);
             currentTurn.RemoveAt(0);
             //if no more characters on the current turn, go to next turn
             if (currentTurn.Count == 0) {
@@ -238,10 +239,6 @@ public class BattleManager : MonoBehaviour
                 Invoke(nameof(StartNextAction), turnEndDelay);
             }
         }
-    }
-
-    private void RemoveFromFrontOfCurrentTurnUI() {
-        bui.RemoveFromCurrentTurnUIAt(0);
     }
 
     public void HandleDeadEnemies() {
@@ -284,11 +281,11 @@ public class BattleManager : MonoBehaviour
             case 99:
                 break;
             default:
-                if (allPlayers.Contains(curr)) {
+                if (playersInFront.Contains(curr) || enemiesInBack.Contains(curr)) {
                     foreach (CharacterCombatBehavior enemy in enemiesInFront) {
                         targets.Add(enemy.gameObject);
                     }
-                } else {
+                } else if (enemiesInFront.Contains(curr) || playersInBack.Contains(curr)) {
                     foreach (CharacterCombatBehavior player in playersInFront) {
                         targets.Add(player.gameObject);
                     }
