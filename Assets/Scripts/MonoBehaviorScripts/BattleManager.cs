@@ -59,6 +59,8 @@ public class BattleManager : MonoBehaviour
         } else {
             character.next = listToPlace[0];
             character.prev = listToPlace[listToPlace.Count - 1];
+            listToPlace[listToPlace.Count - 1].next = character;
+            listToPlace[0].prev = character;
         }
 
 
