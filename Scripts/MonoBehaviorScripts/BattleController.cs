@@ -14,6 +14,7 @@ public class BattleController : MonoBehaviour
     public Color selectionColor;
     private float actionCode;
     private bool isInActionMenu;
+    public bool isControllerActive;
 
     //Target Menu Variables
     private GameObject selectedTarget;
@@ -34,6 +35,10 @@ public class BattleController : MonoBehaviour
     }
 
     private void OnNavigate(InputValue value) {
+        if (!isControllerActive) {
+            return;
+        }
+
         Vector2 input = value.Get<Vector2>();
 
         if (isInActionMenu) {
@@ -78,13 +83,17 @@ public class BattleController : MonoBehaviour
     }
 
     private void OnSubmit() {
+        if (!isControllerActive) {
+            return;
+        }
+
         if (isInActionMenu) {
             //save action code selected
             actionCode = selectedAction.GetComponent<ActionMenuButton>().actionCode;
 
             //get eligible targets for action code
             List<GameObject> targets = bm.GetActionTargets(actionCode);
-            
+                
             //do actionCode if it does not require a target, else go to target selection mode
             if (targets.Count == 0) {
                 bm.DoAction(actionCode);
@@ -108,6 +117,10 @@ public class BattleController : MonoBehaviour
     }
 
     private void OnCancel() {
+        if (!isControllerActive) {
+            return;
+        }
+
         if (!isInActionMenu) {
             //go back to action menu mode
             selectedTargetArrow.SetActive(false);

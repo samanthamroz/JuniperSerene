@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class BattleManager : MonoBehaviour
 {
-    [SerializeField] private GameObject currentTurnDisplay, nextTurnDisplay, playerImage, enemyImage;
     [SerializeField] private GameObject playersFront, playersBack, enemiesFront, enemiesBack;
     private List<CharacterCombatBehavior> playersInFront = new List<CharacterCombatBehavior>();
     private List<CharacterCombatBehavior> playersInBack = new List<CharacterCombatBehavior>();
     private List<CharacterCombatBehavior> enemiesInFront = new List<CharacterCombatBehavior>();
     private List<CharacterCombatBehavior> enemiesInBack = new List<CharacterCombatBehavior>();
-
     private List<CharacterCombatBehavior> allPlayers {
         get {
             List<CharacterCombatBehavior> aggregate = new List<CharacterCombatBehavior>();
@@ -47,17 +45,16 @@ public class BattleManager : MonoBehaviour
             return aggregate;
         }
     }
-    
     private List<CharacterCombatBehavior> currentTurn, nextTurn;
-    private List<GameObject> currentTurnUI;
     private CharacterCombatBehavior curr {
         get { return currentTurn[0]; }
     }
-
     private BattleUIManager bui;
     private BattleAnimations ba;
+    private BattleController bc;
 
     public void NewCharacterPosition(GameObject character, bool isGoingToFront) {
+        //this function adds the character to its correct side both in worldspace and in its associated List. it does not check if the character is already on that side
         if (character.GetComponent<CharacterCombatBehavior>().isPlayable) {
             if (isGoingToFront) {
                 if (playersInFront.Count == 0) {
@@ -95,7 +92,7 @@ public class BattleManager : MonoBehaviour
                 }
                 character.transform.SetParent(enemiesFront.transform, true);
                 character.transform.localPosition = new Vector3((enemiesInFront.Count * 1.5f),0,0);
-
+                
                 enemiesInFront.Add(character.GetComponent<CharacterCombatBehavior>());
             } else {
                 if (enemiesInBack.Count == 0) {
@@ -111,11 +108,11 @@ public class BattleManager : MonoBehaviour
                 enemiesInBack.Add(character.GetComponent<CharacterCombatBehavior>());
             }
         }
-        character.transform.localRotation = Quaternion.Euler(0,0,0);
-        character.transform.localScale = new Vector3(1,1,1);
+        character.transform.localScale = new Vector3(1.25f,1.25f,1.25f);
     }
-
     private void UpdateCharacterPosition(GameObject character, bool isGoingToFront) {
+        //this function moves the character to the correct side and then shifts all characters on their original side "to the left"
+        
         CharacterCombatBehavior characterCCB =  character.GetComponent<CharacterCombatBehavior>();
         List<GameObject> shiftLeft = new List<GameObject>();
         int count = 1;
@@ -161,6 +158,37 @@ public class BattleManager : MonoBehaviour
             NewCharacterPosition(shiftCharacter, !isGoingToFront);
         }
     }
+    private void UpdateAllCharacterPositions(bool isUpdatingPlayers) {
+        //this function essentially just copies the contents of allCharacters or allEnemies and re-creates them on screen with correct positions
+        //used for when an enemy dies (cannot use UpdateCharacterPosition because it assumes the total number of characters or enemies hasn't changed)
+        if (isUpdatingPlayers) {
+            List<CharacterCombatBehavior> playersInFrontCopy = playersInFront;
+            List<CharacterCombatBehavior> playersInBackCopy = playersInBack;
+
+            playersInFront = new List<CharacterCombatBehavior>();
+            playersInBack = new List<CharacterCombatBehavior>();
+
+            foreach (CharacterCombatBehavior player in playersInFrontCopy) {
+                NewCharacterPosition(player.gameObject, true);
+            }
+            foreach (CharacterCombatBehavior player in playersInBackCopy) {
+                NewCharacterPosition(player.gameObject, false);
+            }
+        } else {
+            List<CharacterCombatBehavior> enemiesInFrontCopy = enemiesInFront;
+            List<CharacterCombatBehavior> enemiesInBackCopy = enemiesInBack;
+
+            enemiesInFront = new List<CharacterCombatBehavior>();
+            enemiesInBack = new List<CharacterCombatBehavior>();
+
+            foreach (CharacterCombatBehavior enemy in enemiesInFrontCopy) {
+                NewCharacterPosition(enemy.gameObject, true);
+            }
+            foreach (CharacterCombatBehavior enemy in enemiesInBackCopy) {
+                NewCharacterPosition(enemy.gameObject, false);
+            }
+        }
+    }
     /*
     Turn Management:
         StartBattle(): called at the end of Start() in the BattleInitializer script. populates char lists and nextTurn
@@ -172,6 +200,7 @@ public class BattleManager : MonoBehaviour
     public void StartBattle() {
         bui = gameObject.GetComponent<BattleUIManager>();
         ba = gameObject.GetComponent<BattleAnimations>();
+        bc = gameObject.GetComponent<BattleController>();
 
         //initialize 1st turn order
         CreateNextTurnOrder();
@@ -202,9 +231,11 @@ public class BattleManager : MonoBehaviour
         //Write stuff into menu if character is playable, else disable menu and choose enemy action
         if (allEnemies.Contains(curr)) {
             bui.DisableActionMenu();
+            bc.isControllerActive = false;
             Invoke(nameof(DoEnemyAction), ba.TurnStart(curr.gameObject));
         } else {
             bui.EnableActionMenu();
+            bc.isControllerActive = true;
             ba.TurnStart(curr.gameObject);
             //write options into menu
             //wait for UI input
@@ -240,14 +271,19 @@ public class BattleManager : MonoBehaviour
             }
         }
     }
-
     public void HandleDeadEnemies() {
         List<CharacterCombatBehavior> deadEnemies = new List<CharacterCombatBehavior>();
         foreach (CharacterCombatBehavior enemy in allEnemies) {
             if (enemy.vie <= 0) {
                 deadEnemies.Add(enemy);
+                if (enemiesInFront.Contains(enemy)) {
+                    enemiesInFront.Remove(enemy);
+                } else {
+                    enemiesInBack.Remove(enemy);
+                }
             }
         }
+        UpdateAllCharacterPositions(false);
         
         foreach (CharacterCombatBehavior deadEnemy in deadEnemies) {
             DestroyImmediate(deadEnemy.gameObject, false); //DO *NOT* CHANGE TO TRUE, CHECK DOCUMENTATION
@@ -310,6 +346,7 @@ public class BattleManager : MonoBehaviour
                 throw new Exception("Action code needs target");
         }
         if (success) {
+            bc.isControllerActive = false;
             EndCurrentAction();
         }
     }
@@ -323,7 +360,8 @@ public class BattleManager : MonoBehaviour
                 throw new Exception("Invalid action code");
         }
 
-        EndCurrentAction();
+        bc.isControllerActive = false;
+        Invoke("EndCurrentAction", 1f);
     }
     public void DoEnemyAction() {
         bool success = false;
@@ -338,8 +376,8 @@ public class BattleManager : MonoBehaviour
             bui.ChangeActionText("Attack");
             BasicAttack(chosenPlayer);
         }
-        
-        EndCurrentAction();
+
+        Invoke("EndCurrentAction", 1f);
     }
 
     /*
@@ -349,9 +387,11 @@ public class BattleManager : MonoBehaviour
     private void BasicAttack(CharacterCombatBehavior target) {
         int damageDone = curr.Attack();
         ba.Attack(curr.gameObject);
-        target.Hurt(damageDone);
 
-        //Debug.Log("Player " + currentTurn[0].name + " attacks Enemy " + target.debugName);
+        target.Hurt(damageDone);
+        ba.Hurt(target.gameObject);
+
+        bui.WriteDamageText(damageDone, target.gameObject.transform.position);
     }
     private bool Move() {
         return Move(curr);
