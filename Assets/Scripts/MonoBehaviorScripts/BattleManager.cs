@@ -243,8 +243,10 @@ public class BattleManager : MonoBehaviour
         UpdateAllCharacterPositions();
         if (enemiesInFront.Count == 0) {
             foreach (Character enemy in enemiesInBack) {
-                Move(enemy);
+                enemy.isInFront = true;
+                NewCharacterPosition(enemy);
             }
+            enemiesInBack = new List<Character>();
         }
     }
     /*

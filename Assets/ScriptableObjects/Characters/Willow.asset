@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Willow
   m_EditorClassIdentifier: 
   maxHealth: 1600
-  currentHealth: 0
-  currentVie: 0
-  isInFront: 1
+  currentHealth: 1600
+  currentVie: 1600
+  isInFront: 0
   isPlayable: 1
   isHead: 0
   name: Willow
@@ -23,4 +23,4 @@ MonoBehaviour:
   uiSprite: {fileID: 21300000, guid: 9a524723d7e274b48b2a4981b133b5d3, type: 3}
   gameObject: {fileID: 0}
   next: {fileID: 11400000, guid: cbea704980c84f349bf8b2cb758641ec, type: 2}
-  prev: {fileID: 11400000, guid: 9c91af249edacd743aa041083b6b0102, type: 2}
+  prev: {fileID: 11400000, guid: cbea704980c84f349bf8b2cb758641ec, type: 2}
