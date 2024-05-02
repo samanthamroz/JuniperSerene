@@ -3086,6 +3086,8 @@ MonoBehaviour:
   playersBack: {fileID: 1305694176}
   enemiesFront: {fileID: 147994973}
   enemiesBack: {fileID: 2050180894}
+  enemyParty: {fileID: 11400000, guid: 1d2ba932eae366946b71ed033dd52261, type: 2}
+  playerParty: {fileID: 11400000, guid: fe6bc0b8fc302b94a87ca4ebe9c5f8e4, type: 2}
 --- !u!114 &1994643987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3098,16 +3100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 527d3675378829243b980a28beb82785, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefabs:
-  - {fileID: 1192494836916155685, guid: e6a24a2a9fb0ae148bac2059cc4f3ec2, type: 3}
-  - {fileID: 6538136201218979237, guid: 5445783cb5dc49f41b1b82146214d7a9, type: 3}
-  - {fileID: 5963376832968090908, guid: fa4c3f9c7543a9d4dacd6b28c72271e7, type: 3}
-  - {fileID: 4397961355659926160, guid: def015e233d6a7b448ecdde28f1f0c20, type: 3}
-  - {fileID: 6750330598381202461, guid: 92d16d7ce0f9423449676e677decf655, type: 3}
-  enemyPrefabs:
-  - {fileID: 3949334987920383603, guid: 851e2ffadff01f3448945744f7e71487, type: 3}
-  - {fileID: 9065714013637371472, guid: a77ab4209f6b9994c8438da3cbc15a37, type: 3}
-  - {fileID: 8352015179822823360, guid: 34740e54e059a8b43baa99f9383b5b30, type: 3}
+  characterPrefab: {fileID: 2967074875404645516, guid: 4302b41cee705b14c88fee8808ff90c0, type: 3}
 --- !u!114 &1994643988
 MonoBehaviour:
   m_ObjectHideFlags: 0

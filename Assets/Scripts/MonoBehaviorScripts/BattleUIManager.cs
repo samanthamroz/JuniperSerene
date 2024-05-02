@@ -11,7 +11,7 @@ public class BattleUIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI actionText;
     private List<GameObject> currentTurnUI, nextTurnUI;
 
-    public void CreateNewTurnUI(List<CharacterCombatBehavior> currentTurn, List<CharacterCombatBehavior> nextTurn) {
+    public void CreateNewTurnUI(List<Character> currentTurn, List<Character> nextTurn) {
         //Clear display
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("UI Image"))
         {
@@ -20,7 +20,7 @@ public class BattleUIManager : MonoBehaviour
 
         //display current turn
         currentTurnUI = new List<GameObject>();
-        foreach (CharacterCombatBehavior character in currentTurn) {
+        foreach (Character character in currentTurn) {
             GameObject curr;
             curr = Instantiate(characterImage, currentTurnDisplay.transform);
 
@@ -29,7 +29,7 @@ public class BattleUIManager : MonoBehaviour
         }
         
         nextTurnUI = new List<GameObject>();
-        foreach (CharacterCombatBehavior character in nextTurn) {
+        foreach (Character character in nextTurn) {
             GameObject temp;
             temp = Instantiate(characterImage, nextTurnDisplay.transform);
 

@@ -17,11 +17,11 @@ public class BattleController : MonoBehaviour
     public bool isControllerActive;
 
     //Target Menu Variables
-    private GameObject selectedTarget;
+    private Character selectedTarget;
     private GameObject selectedTargetArrow {
         get {
             if (selectedTarget != null) {
-                return selectedTarget.transform.GetChild(0).gameObject;
+                return selectedTarget.gameObject.transform.GetChild(0).gameObject;
             }
             return null;
         }
@@ -66,9 +66,9 @@ public class BattleController : MonoBehaviour
 
             if (input.x == 0) {
                 if (input.y == 1) { //up
-                    selectedTarget = selectedTarget.GetComponent<DoubleLinkedList>().next;
+                    selectedTarget = selectedTarget.next;
                 } else if (input.y == -1) { //down
-                    selectedTarget = selectedTarget.GetComponent<DoubleLinkedList>().prev;
+                    selectedTarget = selectedTarget.prev;
                 }
             } else {
                 if (input.x == 1) {
@@ -92,7 +92,7 @@ public class BattleController : MonoBehaviour
             actionCode = selectedAction.GetComponent<ActionMenuButton>().actionCode;
 
             //get eligible targets for action code
-            List<GameObject> targets = bm.GetActionTargets(actionCode);
+            List<Character> targets = bm.GetActionTargets(actionCode);
                 
             //do actionCode if it does not require a target, else go to target selection mode
             if (targets.Count == 0) {

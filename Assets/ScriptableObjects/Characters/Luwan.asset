@@ -12,6 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 300cd2d5f9430794881b79ba3a622f11, type: 3}
   m_Name: Luwan
   m_EditorClassIdentifier: 
-  maxHealth: 0
+  maxHealth: 1500
   currentHealth: 0
   currentVie: 0
+  isInFront: 1
+  isPlayable: 1
+  isHead: 0
+  name: Luwan
+  sprite: {fileID: 1359068085, guid: 08333cefcc4061d4394d09ba9c6f9600, type: 3}
+  uiSprite: {fileID: 21300000, guid: 2549899b482f4fa4d8f0d1131d8c8d03, type: 3}
+  gameObject: {fileID: 0}
+  next: {fileID: 11400000, guid: cbea704980c84f349bf8b2cb758641ec, type: 2}
+  prev: {fileID: 11400000, guid: 1d9dfaa6c2f72324aa1ee29c9a3b5005, type: 2}

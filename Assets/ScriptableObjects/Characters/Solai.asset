@@ -12,6 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 300cd2d5f9430794881b79ba3a622f11, type: 3}
   m_Name: Solai
   m_EditorClassIdentifier: 
-  maxHealth: 0
+  maxHealth: 1800
   currentHealth: 0
   currentVie: 0
+  isInFront: 1
+  isPlayable: 0
+  isHead: 0
+  name: Solai
+  sprite: {fileID: -1345441280, guid: 08333cefcc4061d4394d09ba9c6f9600, type: 3}
+  uiSprite: {fileID: 21300000, guid: 6f84b5af1a99b3b4f89266c78adab2f1, type: 3}
+  gameObject: {fileID: 0}
+  next: {fileID: 11400000}
+  prev: {fileID: 11400000}

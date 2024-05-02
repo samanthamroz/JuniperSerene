@@ -8,11 +8,7 @@ public class BattleAnimations : MonoBehaviour
     //All Battle Animation methods return the number of seconds of delay needed for the animation
     public int TurnStart(GameObject character) {
         LeanTween.scale(character, new Vector3(1.35f,1.35f,1.35f), .5f).setLoopPingPong();
-        if (character.GetComponent<CharacterCombatBehavior>().isPlayable) {
-            return 0;
-        } else {
-            return 1;
-        }
+        return 0;
     }
 
     public int TurnEnd(GameObject character) {

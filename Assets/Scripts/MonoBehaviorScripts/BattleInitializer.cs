@@ -5,7 +5,7 @@ using Unity.UI;
 
 public class BattleInitializer : MonoBehaviour
 {
-    public List<GameObject> playerPrefabs, enemyPrefabs;
+    public GameObject characterPrefab;
     private BattleManager bm;
     private BattleController bc;
     private BattleUIManager bui;
@@ -16,38 +16,24 @@ public class BattleInitializer : MonoBehaviour
         bui = gameObject.GetComponent<BattleUIManager>();
 
         //initialize all players/enemies
-        GameObject player1 = Instantiate(playerPrefabs[0]);
-        player1.GetComponent<CharacterCombatBehavior>().InitCharacter("Juniper");
-        bm.NewCharacterPosition(player1, false);
+        foreach (Character player in bm.playerParty.partyCharacters) {
+            player.next = null;
+            player.prev = null;
+            player.gameObject = Instantiate(characterPrefab);
+            player.gameObject.name = player.name;
+            player.gameObject.GetComponent<SpriteRenderer>().sprite = player.sprite;
+            bm.NewCharacterPosition(player);
+        }
 
-        GameObject player2 = Instantiate(playerPrefabs[1]);
-        player2.GetComponent<CharacterCombatBehavior>().InitCharacter("Lenoir");
-        bm.NewCharacterPosition(player2, true);
+        foreach (Character enemy in bm.enemyParty.partyCharacters) {
+            enemy.next = null;
+            enemy.prev = null;
+            enemy.gameObject = Instantiate(characterPrefab);
+            enemy.gameObject.name = enemy.name;
+            enemy.gameObject.GetComponent<SpriteRenderer>().sprite = enemy.sprite;
+            bm.NewCharacterPosition(enemy);
+        }
 
-        GameObject player3 = Instantiate(playerPrefabs[2]);
-        player3.GetComponent<CharacterCombatBehavior>().InitCharacter("Solai");
-        bm.NewCharacterPosition(player3, true);
-
-        GameObject player4 = Instantiate(playerPrefabs[3]);
-        player4.GetComponent<CharacterCombatBehavior>().InitCharacter("Luwan");
-        bm.NewCharacterPosition(player4, true);
-
-        GameObject player5 = Instantiate(playerPrefabs[4]);
-        player5.GetComponent<CharacterCombatBehavior>().InitCharacter("Willow");
-        bm.NewCharacterPosition(player5, true);
-
-        GameObject enemy1 = Instantiate(enemyPrefabs[0]);
-        enemy1.GetComponent<CharacterCombatBehavior>().InitCharacter("OldMan");
-        bm.NewCharacterPosition(enemy1, true);
-
-        GameObject enemy2 = Instantiate(enemyPrefabs[1]);
-        enemy2.GetComponent<CharacterCombatBehavior>().InitCharacter("Patches");
-        bm.NewCharacterPosition(enemy2, true);
-        
-        GameObject enemy3 = Instantiate(enemyPrefabs[2]);
-        enemy3.GetComponent<CharacterCombatBehavior>().InitCharacter("Moogle");
-        bm.NewCharacterPosition(enemy3, false);
-        
         bui.ChangeActionText("Start");
 
         //Start Battle

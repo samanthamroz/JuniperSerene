@@ -12,6 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 300cd2d5f9430794881b79ba3a622f11, type: 3}
   m_Name: Moogle
   m_EditorClassIdentifier: 
-  maxHealth: 0
+  maxHealth: 800
   currentHealth: 0
   currentVie: 0
+  isInFront: 0
+  isPlayable: 0
+  name: Moogle
+  sprite: {fileID: 32538271, guid: 08333cefcc4061d4394d09ba9c6f9600, type: 3}
+  uiSprite: {fileID: 21300000, guid: 435ad2b427d4fbb47a9a419cf2f92564, type: 3}
