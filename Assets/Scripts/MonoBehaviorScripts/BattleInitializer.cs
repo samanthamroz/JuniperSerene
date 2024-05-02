@@ -15,6 +15,8 @@ public class BattleInitializer : MonoBehaviour
         bc = gameObject.GetComponent<BattleController>();
         bui = gameObject.GetComponent<BattleUIManager>();
 
+        bui.WriteNewHealthBars(bm.playerParty);
+
         //initialize all players/enemies
         foreach (Character player in bm.playerParty.partyCharacters) {
             player.next = null;
@@ -31,6 +33,7 @@ public class BattleInitializer : MonoBehaviour
             enemy.gameObject = Instantiate(characterPrefab);
             enemy.gameObject.name = enemy.name;
             enemy.gameObject.GetComponent<SpriteRenderer>().sprite = enemy.sprite;
+            enemy.gameObject.GetComponent<SpriteRenderer>().flipX = true;
             bm.NewCharacterPosition(enemy);
         }
 

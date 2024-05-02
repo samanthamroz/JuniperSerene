@@ -19,21 +19,36 @@ public class BattleAnimations : MonoBehaviour
 
     public float Attack(GameObject character) {
         LeanTween.cancel(character);
-        LeanTween.scale(character, new Vector3(1.35f,1.32f,1.35f), .5f);
-        LeanTween.moveLocal(character, new Vector3(
-            (character.transform.localPosition.x - 0.5f),
-            (character.transform.localPosition.y - 0.5f),
-            0f), .2f).setRepeat(2).setLoopPingPong().setEase(LeanTweenType.easeInOutExpo);
+        LeanTween.scale(character, new Vector3(1.35f,1.35f,1.35f), .5f);
+        if (character.GetComponent<SpriteRenderer>().flipX == true) {
+            LeanTween.moveLocal(character, new Vector3(
+                (character.transform.localPosition.x + 0.5f),
+                (character.transform.localPosition.y - 0.5f),
+                0f), .2f).setRepeat(2).setLoopPingPong().setEase(LeanTweenType.easeInOutExpo);
+        } else {
+            LeanTween.moveLocal(character, new Vector3(
+                (character.transform.localPosition.x - 0.5f),
+                (character.transform.localPosition.y - 0.5f),
+                0f), .2f).setRepeat(2).setLoopPingPong().setEase(LeanTweenType.easeInOutExpo);
+        }
 
         return 1f;
     }
 
     public float Hurt(GameObject character) {
         LeanTween.cancel(character);
-        LeanTween.moveLocal(character, new Vector3(
-            (character.transform.localPosition.x + 0.1f),
-            (character.transform.localPosition.y + 0.1f),
-            0f), .15f).setDelay(.1f).setRepeat(2).setLoopPingPong().setEase( LeanTweenType.easeInQuad ).setEase( LeanTweenType.easeOutExpo );
+        if (character.GetComponent<SpriteRenderer>().flipX == true) {
+            LeanTween.moveLocal(character, new Vector3(
+                (character.transform.localPosition.x - 0.1f),
+                (character.transform.localPosition.y + 0.1f),
+                0f), .15f).setDelay(.1f).setRepeat(2).setLoopPingPong().setEase( LeanTweenType.easeInQuad ).setEase( LeanTweenType.easeOutExpo );
+        } else {
+            LeanTween.moveLocal(character, new Vector3(
+                (character.transform.localPosition.x + 0.1f),
+                (character.transform.localPosition.y + 0.1f),
+                0f), .15f).setDelay(.1f).setRepeat(2).setLoopPingPong().setEase( LeanTweenType.easeInQuad ).setEase( LeanTweenType.easeOutExpo );
+        }
+
 
         return .5f;
     }

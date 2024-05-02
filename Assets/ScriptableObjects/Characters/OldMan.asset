@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 300cd2d5f9430794881b79ba3a622f11, type: 3}
   m_Name: OldMan
   m_EditorClassIdentifier: 
-  maxHealth: 10
-  currentHealth: 10
-  currentVie: 10
-  isInFront: 1
+  maxHealth: 1800
+  currentHealth: 1800
+  currentVie: 1800
+  isInFront: 0
   isPlayable: 0
   isHead: 0
   name: Old Man
   sprite: {fileID: -344725880, guid: 08333cefcc4061d4394d09ba9c6f9600, type: 3}
   uiSprite: {fileID: 21300000, guid: 30f244722d8681f4fbbb00d53bb6df48, type: 3}
   gameObject: {fileID: 0}
-  next: {fileID: 11400000, guid: 56d371be1abd5df47b8e2458d4164cff, type: 2}
-  prev: {fileID: 11400000, guid: 56d371be1abd5df47b8e2458d4164cff, type: 2}
+  next: {fileID: 11400000, guid: e38149a63cded7d438e33d43e5940d03, type: 2}
+  prev: {fileID: 11400000, guid: e38149a63cded7d438e33d43e5940d03, type: 2}

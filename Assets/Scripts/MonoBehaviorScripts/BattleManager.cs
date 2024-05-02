@@ -33,22 +33,27 @@ public class BattleManager : MonoBehaviour
     public void NewCharacterPosition(Character character) {
         List<Character> listToPlace;
         GameObject containerToPlace;
+        int placeModifier;
 
         if (character.isPlayable) {
             if (character.isInFront) {
                 listToPlace = playersInFront;
                 containerToPlace = playersFront;
+                placeModifier = 1;
             } else {
                 listToPlace = playersInBack;
                 containerToPlace = playersBack;
+                placeModifier = -1;
             }
         } else {
             if (character.isInFront) {
                 listToPlace = enemiesInFront;
                 containerToPlace = enemiesFront;
+                placeModifier = -1;
             } else {
                 listToPlace = enemiesInBack;
                 containerToPlace = enemiesBack;
+                placeModifier = 1;
             }
         }
 
@@ -66,7 +71,7 @@ public class BattleManager : MonoBehaviour
 
         //adds the character gameObject to the correct container gameObject for placement
         character.gameObject.transform.parent = containerToPlace.transform;
-        character.gameObject.transform.localPosition = new Vector3((listToPlace.Count * 1.5f),0,0);
+        character.gameObject.transform.localPosition = new Vector3((listToPlace.Count * 1.5f * placeModifier),0,0);
 
         //adds the character reference to the correct local list
         listToPlace.Add(character);

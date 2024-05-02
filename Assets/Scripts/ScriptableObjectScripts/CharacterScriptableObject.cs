@@ -5,9 +5,9 @@ using System;
 public class Character : ScriptableObject
 {
     //STATS
-    [SerializeField] private int maxHealth;
-    [SerializeField] private int currentHealth;
-    [SerializeField] public int currentVie;
+    public int maxHealth;
+    public int currentHealth;
+    public int currentVie;
 
     void OnValidate() {
         //called when a value is changed in the inspector

@@ -7,7 +7,7 @@ using TMPro;
 public class HealthBar : MonoBehaviour
 {
     public TextMeshProUGUI textField;
-    public void UpdateText() {
+    public void UpdateValue() {
         textField.text = gameObject.GetComponent<Slider>().value.ToString();
     }
 }
