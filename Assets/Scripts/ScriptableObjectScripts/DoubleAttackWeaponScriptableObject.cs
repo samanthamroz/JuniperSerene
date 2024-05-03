@@ -7,8 +7,7 @@ public class DoubleAttackWeapon : Weapon
     {
         hasAugment = true;
     }
-    public override int DoBasicAttack() {
-        Debug.Log("Double attack");
-        return damage*2;
+    public override int[] DoBasicAttack() {
+        return new int[] {damage,damage};
     }
 }

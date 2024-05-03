@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using System.Collections;
 
 public class BattleManager : MonoBehaviour
 {
@@ -306,7 +307,7 @@ public class BattleManager : MonoBehaviour
         switch (actionCode) {
             case 1:
                 bui.ChangeActionText("Attack");
-                BasicAttack(target);
+                StartCoroutine(BasicAttack(target));
                 break;
             default:
                 throw new Exception("Invalid action code");
@@ -326,25 +327,42 @@ public class BattleManager : MonoBehaviour
         }
         if (!success) {
             bui.ChangeActionText("Attack");
-            BasicAttack(chosenPlayer);
+            StartCoroutine(BasicAttack(chosenPlayer));
         }
 
-        Invoke("EndCurrentAction", 1f);
+        Invoke(nameof(EndCurrentAction), 1f);
     }
 
     /*
     Action Functions:                 
         
     */
-    private void BasicAttack(Character target) {
-        int damageDone = curr.BasicAttack(target, 0);
+    private IEnumerator BasicAttack(Character target) {
+        //actual attack
+        int[] damageDone = curr.BasicAttack(target, 0);
 
-        //
+        //visual feedback
         ba.Attack(curr.gameObject);
         ba.Hurt(target.gameObject);
-        
-        bui.UpdateHealthBar(target);
         bui.DrawDamageText(damageDone, target.gameObject.transform.position);
+        bui.UpdateHealthBar(target);
+        if (damageDone.Length > 1) {
+            for (int i = 1; i < damageDone.Length; i++) {
+                yield return new WaitForSeconds(0.2f);
+                ba.Attack(curr.gameObject);
+                ba.Hurt(target.gameObject);
+            }
+        }
+
+        yield return new WaitForSeconds(0.2f + ((damageDone.Length - 1) * 0.2f));
+
+        ba.FinishAttack(curr.gameObject);
+        if (damageDone.Length > 1) {
+            for (int i = 1; i < damageDone.Length; i++) {
+                yield return new WaitForSeconds(0.2f);
+                ba.FinishAttack(curr.gameObject);
+            }
+        }
     }
     private bool Move() {
         return Move(curr);
@@ -355,7 +373,7 @@ public class BattleManager : MonoBehaviour
                 playersInBack.Contains(moving) ||
                 (enemiesInFront.Contains(moving) && enemiesInFront.Count > 1) ||
                 (enemiesInBack.Contains(moving))) {
-            UpdateCharacterPosition(moving, (enemiesInBack.Contains(moving)) || playersInBack.Contains(moving));
+            UpdateCharacterPosition(moving, enemiesInBack.Contains(moving) || playersInBack.Contains(moving));
         } else {
             success = false;
         }

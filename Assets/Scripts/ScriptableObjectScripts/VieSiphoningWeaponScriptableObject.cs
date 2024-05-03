@@ -7,8 +7,7 @@ public class VieSiphoningWeapon : Weapon
     {
         hasAugment = true;
     }
-    public override int DoBasicAttack() {
-        Debug.Log("Siphon attack");
-        return damage;
+    public int[] DoBasicAttack(Character attackingCharacter) {
+        return new int[] {damage};
     }
 }

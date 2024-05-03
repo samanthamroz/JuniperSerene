@@ -6,7 +6,7 @@ using TMPro;
 public class BattleUIManager : MonoBehaviour
 {
     [SerializeField] private GameObject currentTurnContainer, nextTurnContainer, healthBarsContainer, actionMenu;
-    [SerializeField] private GameObject characterImagePrefab, healthBarPrefab, damageText;
+    [SerializeField] private GameObject characterImagePrefab, healthBarPrefab, damageTextPrefab;
     [SerializeField] private TextMeshProUGUI actionText;
     private List<GameObject> currentTurnUI, nextTurnUI;
 
@@ -96,17 +96,32 @@ public class BattleUIManager : MonoBehaviour
         actionText.text = "";
     }
 
-    public void DrawDamageText(int damage, Vector3 screenCoords) {
-        Vector2 canvasPos;
-        Vector2 screenPoint = Camera.main.WorldToScreenPoint(new Vector3(screenCoords.x + .5f, screenCoords.y + 1, screenCoords.z));
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(damageText.transform.parent.GetComponent<RectTransform>(), screenPoint, null, out canvasPos);
-        damageText.transform.localPosition = canvasPos;
-
-        damageText.GetComponent<TextMeshProUGUI>().text = damage.ToString();
-
-        Invoke("RemoveDamageText", gameObject.GetComponent<BattleAnimations>().DamageText(damageText));
+    public void DrawDamageText(int[] damage, Vector3 screenCoords) {
+        GameObject[] textObjs = new GameObject[damage.Length];
+        for (int i = 0; i < damage.Length; i++) {
+            textObjs[i] = Instantiate(damageTextPrefab, actionMenu.transform.parent);
+        }
+        StartCoroutine(DrawDamageText(textObjs, damage, screenCoords));
     }
-    private void RemoveDamageText() {
-        damageText.GetComponent<TextMeshProUGUI>().text = "";
+
+    private IEnumerator DrawDamageText(GameObject[] textObjs, int[] damage, Vector3 screenCoords) {
+        for (int i = 0; i < damage.Length; i++) {
+            Vector2 screenPoint = Camera.main.WorldToScreenPoint(new Vector3(screenCoords.x + .5f, screenCoords.y + 1, screenCoords.z));
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(actionMenu.transform.parent.GetComponent<RectTransform>(), screenPoint, null, out Vector2 canvasPos);
+            textObjs[i].transform.localPosition = canvasPos;
+            if (i % 2 == 1) {
+                textObjs[i].transform.localPosition = new Vector3(textObjs[i].transform.localPosition.x - 80, textObjs[i].transform.localPosition.y, textObjs[i].transform.localPosition.z);
+            }
+            textObjs[i].GetComponent<TextMeshProUGUI>().text = damage[i].ToString();
+
+            RemoveDamageText(textObjs[i], gameObject.GetComponent<BattleAnimations>().DamageText(textObjs[i])); 
+
+            // Pause for 1 second before processing the next damage
+            yield return new WaitForSeconds(.2f);
+        }
+    }
+
+    private void RemoveDamageText(GameObject damageText, float delayInSeconds) {
+        Destroy(damageText, delayInSeconds);
     }
 }

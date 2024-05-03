@@ -19,20 +19,37 @@ public class BattleAnimations : MonoBehaviour
 
     public float Attack(GameObject character) {
         LeanTween.cancel(character);
-        LeanTween.scale(character, new Vector3(1.35f,1.35f,1.35f), .5f);
+        LeanTween.scale(character, new Vector3(1.35f,1.35f,1.35f), .2f);
         if (character.GetComponent<SpriteRenderer>().flipX == true) {
             LeanTween.moveLocal(character, new Vector3(
                 (character.transform.localPosition.x + 0.5f),
                 (character.transform.localPosition.y - 0.5f),
-                0f), .2f).setRepeat(2).setLoopPingPong().setEase(LeanTweenType.easeInOutExpo);
+                0f), .2f).setEase(LeanTweenType.easeInOutExpo);
         } else {
             LeanTween.moveLocal(character, new Vector3(
                 (character.transform.localPosition.x - 0.5f),
                 (character.transform.localPosition.y - 0.5f),
-                0f), .2f).setRepeat(2).setLoopPingPong().setEase(LeanTweenType.easeInOutExpo);
+                0f), .2f).setEase(LeanTweenType.easeInOutExpo);
         }
 
-        return 1f;
+        return .2f;
+    }
+
+    public float FinishAttack(GameObject character) {
+        LeanTween.cancel(character);
+        if (character.GetComponent<SpriteRenderer>().flipX == true) {
+            LeanTween.moveLocal(character, new Vector3(
+                (character.transform.localPosition.x - 0.5f),
+                (character.transform.localPosition.y + 0.5f),
+                0f), .2f).setEase(LeanTweenType.easeInOutExpo);
+        } else {
+            LeanTween.moveLocal(character, new Vector3(
+                (character.transform.localPosition.x + 0.5f),
+                (character.transform.localPosition.y + 0.5f),
+                0f), .2f).setEase(LeanTweenType.easeInOutExpo);
+        }
+
+        return .2f;
     }
 
     public float Hurt(GameObject character) {

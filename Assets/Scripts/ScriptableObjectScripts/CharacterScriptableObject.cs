@@ -48,12 +48,14 @@ public class Character : ScriptableObject
         }
     }
 
-    public int BasicAttack(Character target, int weaponIndex) {
-        int totalDamageDone = 0;
+    public int[] BasicAttack(Character target, int weaponIndex) {
+        int[] totalDamageDone = new int[1];
         try {
             Weapon weapon = weaponsList[weaponIndex];
             totalDamageDone = weapon.DoBasicAttack();
-            target.Hurt(totalDamageDone);
+            foreach (int damage in totalDamageDone) {
+                target.Hurt(damage);
+            }
         } catch (System.IndexOutOfRangeException) {
             Debug.Log("Bad weapon index for BasicAttack(). No damage awarded.");
         }
