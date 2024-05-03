@@ -15,9 +15,13 @@ MonoBehaviour:
   maxHealth: 1600
   currentHealth: 1600
   currentVie: 1600
+  weaponsList:
+  - {fileID: 11400000, guid: 8c5127fce43528a479304c2737e13adc, type: 2}
+  - {fileID: 11400000, guid: a5bb1f1cd1d82a6449bf146fb29a0bc6, type: 2}
+  attacksList: []
+  abilitiesList: []
   isInFront: 0
   isPlayable: 1
-  isHead: 0
   name: Willow
   sprite: {fileID: 1879646218, guid: 08333cefcc4061d4394d09ba9c6f9600, type: 3}
   uiSprite: {fileID: 21300000, guid: 9a524723d7e274b48b2a4981b133b5d3, type: 3}

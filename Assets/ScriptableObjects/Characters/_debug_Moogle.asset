@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 300cd2d5f9430794881b79ba3a622f11, type: 3}
-  m_Name: Moogle
+  m_Name: _debug_Moogle
   m_EditorClassIdentifier: 
   maxHealth: 800
   currentHealth: 800

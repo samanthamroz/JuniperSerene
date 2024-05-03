@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aeadfd37af8b4df4e999f97d1b001879, type: 3}
+  m_Name: _debug_MossSling
+  m_EditorClassIdentifier: 
+  name: Moss Sling
+  damage: 25
+  weaponType: 5
+  hasAugment: 0
+  sprite: {fileID: 21300000, guid: d950ebe34974e0040b627ce0af7f2e82, type: 3}

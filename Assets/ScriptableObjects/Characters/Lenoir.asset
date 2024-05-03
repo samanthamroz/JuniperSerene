@@ -13,11 +13,15 @@ MonoBehaviour:
   m_Name: Lenoir
   m_EditorClassIdentifier: 
   maxHealth: 1200
-  currentHealth: 0
-  currentVie: 0
+  currentHealth: 1200
+  currentVie: 1200
+  weaponsList:
+  - {fileID: 11400000, guid: 19ff5ea11dea9c74bbdaeab85cd46fa5, type: 2}
+  - {fileID: 11400000, guid: 144a559e1bb7c1e4ea4777f142ad1366, type: 2}
+  attacksList: []
+  abilitiesList: []
   isInFront: 1
   isPlayable: 1
-  isHead: 0
   name: Lenoir
   sprite: {fileID: -1569377248, guid: 08333cefcc4061d4394d09ba9c6f9600, type: 3}
   uiSprite: {fileID: 21300000, guid: ed511d1d547e0ee46b8ea82f064d155e, type: 3}

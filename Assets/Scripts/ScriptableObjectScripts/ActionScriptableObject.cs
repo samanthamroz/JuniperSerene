@@ -7,5 +7,6 @@ namespace BattleSystem {
     {
         public new string name;
 
+        
     }
 }
