@@ -342,6 +342,7 @@ public class BattleManager : MonoBehaviour
 
         target.Hurt(damageDone);
         ba.Hurt(target.gameObject);
+        bui.UpdateHealthBar(target);
 
         bui.WriteDamageText(damageDone, target.gameObject.transform.position);
     }

@@ -6,5 +6,6 @@ namespace BattleSystem {
     public class Action : ScriptableObject
     {
         public new string name;
+
     }
 }

@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Solai
   m_EditorClassIdentifier: 
   maxHealth: 1800
-  currentHealth: 1800
-  currentVie: 1800
+  currentHealth: 1790
+  currentVie: 1790
+  actionList: []
   isInFront: 1
   isPlayable: 1
-  isHead: 0
   name: Solai
   sprite: {fileID: -1345441280, guid: 08333cefcc4061d4394d09ba9c6f9600, type: 3}
   uiSprite: {fileID: 21300000, guid: 6f84b5af1a99b3b4f89266c78adab2f1, type: 3}

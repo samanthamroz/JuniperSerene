@@ -19,8 +19,7 @@ public class BattleInitializer : MonoBehaviour
 
         //initialize all players/enemies
         foreach (Character player in bm.playerParty.partyCharacters) {
-            player.next = null;
-            player.prev = null;
+            player.BattleReset(true);
             player.gameObject = Instantiate(characterPrefab);
             player.gameObject.name = player.name;
             player.gameObject.GetComponent<SpriteRenderer>().sprite = player.sprite;
@@ -28,8 +27,7 @@ public class BattleInitializer : MonoBehaviour
         }
 
         foreach (Character enemy in bm.enemyParty.partyCharacters) {
-            enemy.next = null;
-            enemy.prev = null;
+            enemy.BattleReset(false);
             enemy.gameObject = Instantiate(characterPrefab);
             enemy.gameObject.name = enemy.name;
             enemy.gameObject.GetComponent<SpriteRenderer>().sprite = enemy.sprite;
