@@ -15,9 +15,12 @@ MonoBehaviour:
   maxHealth: 1800
   currentHealth: 1800
   currentVie: 1800
+  weaponsList:
+  - {fileID: 11400000, guid: 19ff5ea11dea9c74bbdaeab85cd46fa5, type: 2}
+  attacksList: []
+  abilitiesList: []
   isInFront: 0
   isPlayable: 0
-  isHead: 0
   name: Old Man
   sprite: {fileID: -344725880, guid: 08333cefcc4061d4394d09ba9c6f9600, type: 3}
   uiSprite: {fileID: 21300000, guid: 30f244722d8681f4fbbb00d53bb6df48, type: 3}

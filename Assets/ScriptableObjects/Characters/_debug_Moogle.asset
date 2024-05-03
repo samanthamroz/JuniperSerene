@@ -15,9 +15,12 @@ MonoBehaviour:
   maxHealth: 800
   currentHealth: 800
   currentVie: 800
+  weaponsList:
+  - {fileID: 11400000, guid: 26eae4b6e6753b649bb97083b657432a, type: 2}
+  attacksList: []
+  abilitiesList: []
   isInFront: 0
   isPlayable: 0
-  isHead: 0
   name: Moogle
   sprite: {fileID: 32538271, guid: 08333cefcc4061d4394d09ba9c6f9600, type: 3}
   uiSprite: {fileID: 21300000, guid: 435ad2b427d4fbb47a9a419cf2f92564, type: 3}

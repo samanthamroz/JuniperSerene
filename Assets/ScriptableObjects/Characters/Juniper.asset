@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 300cd2d5f9430794881b79ba3a622f11, type: 3}
   m_Name: Juniper
   m_EditorClassIdentifier: 
-  maxHealth: 40
-  currentHealth: 40
-  currentVie: 40
+  maxHealth: 800
+  currentHealth: 800
+  currentVie: 800
+  weaponsList:
+  - {fileID: 11400000, guid: 8c5127fce43528a479304c2737e13adc, type: 2}
   attacksList: []
   abilitiesList: []
   isInFront: 0

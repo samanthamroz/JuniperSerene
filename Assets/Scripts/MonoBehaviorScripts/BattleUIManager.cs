@@ -60,7 +60,7 @@ public class BattleUIManager : MonoBehaviour
         nextTurnUI.RemoveAt(index);
     }
 
-    public void WriteNewHealthBars(Party playerParty) {
+    public void DrawNewHealthBars(Party playerParty) {
         foreach (Character player in playerParty.partyCharacters) {
             GameObject temp = Instantiate(healthBarPrefab, healthBarsContainer.transform);
             temp.name = player.name;
@@ -96,7 +96,7 @@ public class BattleUIManager : MonoBehaviour
         actionText.text = "";
     }
 
-    public void WriteDamageText(int damage, Vector3 screenCoords) {
+    public void DrawDamageText(int damage, Vector3 screenCoords) {
         Vector2 canvasPos;
         Vector2 screenPoint = Camera.main.WorldToScreenPoint(new Vector3(screenCoords.x + .5f, screenCoords.y + 1, screenCoords.z));
         RectTransformUtility.ScreenPointToLocalPointInRectangle(damageText.transform.parent.GetComponent<RectTransform>(), screenPoint, null, out canvasPos);

@@ -337,14 +337,14 @@ public class BattleManager : MonoBehaviour
         
     */
     private void BasicAttack(Character target) {
-        int damageDone = curr.Attack();
+        int damageDone = curr.BasicAttack(target, 0);
+
+        //
         ba.Attack(curr.gameObject);
-
-        target.Hurt(damageDone);
         ba.Hurt(target.gameObject);
+        
         bui.UpdateHealthBar(target);
-
-        bui.WriteDamageText(damageDone, target.gameObject.transform.position);
+        bui.DrawDamageText(damageDone, target.gameObject.transform.position);
     }
     private bool Move() {
         return Move(curr);

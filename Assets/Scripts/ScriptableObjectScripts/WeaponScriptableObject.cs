@@ -22,4 +22,8 @@ public class Weapon : ScriptableObject
     public virtual void OnValidate() {
         hasAugment = false;
     }
+
+    public virtual int DoBasicAttack() {
+        return damage;
+    }
 }

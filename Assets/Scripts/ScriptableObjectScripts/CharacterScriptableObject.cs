@@ -6,16 +6,13 @@ using BattleSystem;
 public class Character : ScriptableObject
 {
     //STATS
-    public int maxHealth;
-    public int currentHealth;
-    public int currentVie;
+    public int maxHealth, currentHealth, currentVie;
 
     //INVENTORY
     public List<Weapon> weaponsList;
 
     //BATTLE ACTIONS
-    public List<Action> attacksList;
-    public List<Action> abilitiesList;
+    public List<Action> attacksList, abilitiesList;
     
     //BATTLE POSITIONING
     public bool isInFront, isPlayable;
@@ -25,8 +22,8 @@ public class Character : ScriptableObject
     public Sprite sprite, uiSprite;
 
     //REFERENCES TO OBJECTS IN SCENE
-    public GameObject gameObject;
-    public Character next, prev;
+    [HideInInspector] public GameObject gameObject;
+    [HideInInspector] public Character next, prev;
 
     void OnValidate() {
         //called when a value is changed in the inspector
@@ -50,8 +47,16 @@ public class Character : ScriptableObject
             currentVie = currentHealth;
         }
     }
-    public int Attack() {
-        //return damage done by the character's attack
-        return 100; //temp value
+
+    public int BasicAttack(Character target, int weaponIndex) {
+        int totalDamageDone = 0;
+        try {
+            Weapon weapon = weaponsList[weaponIndex];
+            totalDamageDone = weapon.DoBasicAttack();
+            target.Hurt(totalDamageDone);
+        } catch (System.IndexOutOfRangeException) {
+            Debug.Log("Bad weapon index for BasicAttack(). No damage awarded.");
+        }
+        return totalDamageDone;
     }
 }

@@ -7,9 +7,8 @@ public class VieSiphoningWeapon : Weapon
     {
         hasAugment = true;
     }
-    public void SpecialAttack()
-    {
-        Debug.Log("Performing double attack!");
-        // Add logic for performing double attack
+    public override int DoBasicAttack() {
+        Debug.Log("Siphon attack");
+        return damage;
     }
 }

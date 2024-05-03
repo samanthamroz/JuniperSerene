@@ -15,7 +15,7 @@ public class BattleInitializer : MonoBehaviour
         bc = gameObject.GetComponent<BattleController>();
         bui = gameObject.GetComponent<BattleUIManager>();
 
-        bui.WriteNewHealthBars(bm.playerParty);
+        bui.DrawNewHealthBars(bm.playerParty);
 
         //initialize all players/enemies
         foreach (Character player in bm.playerParty.partyCharacters) {

@@ -16,8 +16,8 @@ MonoBehaviour:
   currentHealth: 1800
   currentVie: 1800
   weaponsList:
-  - {fileID: 11400000, guid: 342cbf2bce45323439165aa235125f3e, type: 2}
   - {fileID: 11400000, guid: d75f16fe57e86004fbc093f4fc0b2a29, type: 2}
+  - {fileID: 11400000, guid: 342cbf2bce45323439165aa235125f3e, type: 2}
   - {fileID: 11400000, guid: 26eae4b6e6753b649bb97083b657432a, type: 2}
   attacksList: []
   abilitiesList: []
