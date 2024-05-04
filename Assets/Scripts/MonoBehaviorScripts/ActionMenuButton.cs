@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ActionMenuButton : MonoBehaviour
 {
-    public GameObject prev;
-    public GameObject next;
+    public GameObject prev, next, left, right;
     public float actionCode;
 }

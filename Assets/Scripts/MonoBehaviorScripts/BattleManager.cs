@@ -170,17 +170,20 @@ public class BattleManager : MonoBehaviour
         //Write stuff into menu if character is playable, else disable menu and choose enemy action
         if (enemyParty.partyCharacters.Contains(curr)) {
             bui.DisableActionMenu();
-            bc.isControllerActive = false;
+            bc.StopController();
             Invoke(nameof(DoEnemyAction), ba.TurnStart(curr.gameObject));
         } else {
             bui.EnableActionMenu();
-            bc.isControllerActive = true;
+            bui.DrawNewActionMenu(curr.weaponsList);
+            bc.RestartController();
             ba.TurnStart(curr.gameObject);
             //write options into menu
             //wait for UI input
         }
     }
     public void EndCurrentAction() {
+        bc.StopController();
+
         //check for dead players
         bool battleLostFlag = false;
         foreach (Character player in playerParty.partyCharacters) {
@@ -261,7 +264,6 @@ public class BattleManager : MonoBehaviour
         HandleTargettedAction(int actionCode, CCB target): executes targetted actions
     */
     public List<Character> GetActionTargets(float actionCode) {
-        bui.DisableActionMenu();
         List<Character> targets = new List<Character>();
 
         switch (actionCode) {
@@ -285,6 +287,7 @@ public class BattleManager : MonoBehaviour
         return targets;
     }
     public void DoAction(float actionCode) {
+        bui.DisableActionMenu();
         bool success = true;
         switch (actionCode) {
             case -1:
@@ -299,11 +302,11 @@ public class BattleManager : MonoBehaviour
                 throw new Exception("Action code needs target");
         }
         if (success) {
-            bc.isControllerActive = false;
             EndCurrentAction();
         }
     }
     public void DoAction(float actionCode, Character target) {
+        bui.DisableActionMenu();
         switch (actionCode) {
             case 1:
                 bui.ChangeActionText("Attack");
@@ -312,8 +315,6 @@ public class BattleManager : MonoBehaviour
             default:
                 throw new Exception("Invalid action code");
         }
-
-        bc.isControllerActive = false;
         Invoke("EndCurrentAction", 1f);
     }
     public void DoEnemyAction() {

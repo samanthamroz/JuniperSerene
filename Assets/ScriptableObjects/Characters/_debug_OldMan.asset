@@ -19,11 +19,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 19ff5ea11dea9c74bbdaeab85cd46fa5, type: 2}
   attacksList: []
   abilitiesList: []
-  isInFront: 0
+  isInFront: 1
   isPlayable: 0
   name: Old Man
   sprite: {fileID: -344725880, guid: 08333cefcc4061d4394d09ba9c6f9600, type: 3}
   uiSprite: {fileID: 21300000, guid: 30f244722d8681f4fbbb00d53bb6df48, type: 3}
   gameObject: {fileID: 0}
-  next: {fileID: 11400000, guid: e38149a63cded7d438e33d43e5940d03, type: 2}
+  next: {fileID: 11400000, guid: 56d371be1abd5df47b8e2458d4164cff, type: 2}
   prev: {fileID: 11400000, guid: e38149a63cded7d438e33d43e5940d03, type: 2}

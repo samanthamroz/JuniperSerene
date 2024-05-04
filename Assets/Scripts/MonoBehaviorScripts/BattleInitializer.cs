@@ -39,6 +39,5 @@ public class BattleInitializer : MonoBehaviour
 
         //Start Battle
         bm.StartBattle();
-        bc.StartController();
     }
 }

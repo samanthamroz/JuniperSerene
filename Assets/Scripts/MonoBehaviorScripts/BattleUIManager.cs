@@ -3,13 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
+using Unity.VisualScripting;
 public class BattleUIManager : MonoBehaviour
 {
-    [SerializeField] private GameObject currentTurnContainer, nextTurnContainer, healthBarsContainer, actionMenu;
-    [SerializeField] private GameObject characterImagePrefab, healthBarPrefab, damageTextPrefab;
+    [SerializeField] private GameObject currentTurnContainer, nextTurnContainer, healthBarsContainer, actionMenuButtonsContainer;
+    private GameObject initActionMenuButtonsContainerCopy;
+    [SerializeField] private GameObject characterImagePrefab, healthBarPrefab, damageTextPrefab, textActionMenuButtonPrefab, imageActionMenuButtonPrefab;
     [SerializeField] private TextMeshProUGUI actionText;
     private List<GameObject> currentTurnUI, nextTurnUI;
 
+    void Start() {
+        initActionMenuButtonsContainerCopy = actionMenuButtonsContainer;
+    }
     public void CreateNewTurnUI(List<Character> currentTurn, List<Character> nextTurn) {
         //Clear display
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("UI Image"))
@@ -83,12 +89,35 @@ public class BattleUIManager : MonoBehaviour
     }
 
     public void EnableActionMenu() {
-        actionMenu.SetActive(true);
+        actionMenuButtonsContainer.SetActive(true);
     }
     public void DisableActionMenu() {
-        actionMenu.SetActive(false);
+        actionMenuButtonsContainer.SetActive(false);
     }
-    
+    public void DrawNewActionMenu(List<Weapon> weaponsList = null, String[] labelsList = null) {
+        //actionMenuButtonsContainer = initActionMenuButtonsContainerCopy;
+
+        if (weaponsList == null || weaponsList.Count == 0) {
+            actionMenuButtonsContainer.transform.GetChild(0).gameObject.GetComponent<Image>().color = Color.grey;
+        } else {
+            GameObject basicButtonsContainer = actionMenuButtonsContainer.transform.GetChild(0).gameObject;
+            basicButtonsContainer.GetComponent<Image>().color = Color.white;
+            foreach (Weapon weapon in weaponsList) {
+                GameObject temp = Instantiate(imageActionMenuButtonPrefab, basicButtonsContainer.transform);
+                temp.transform.GetChild(0).GetComponent<Image>().sprite = weapon.sprite;
+            }
+        }
+
+        if (labelsList == null) {
+            labelsList = new string[] {"Attacks", "Abilities", "Retreat", "Surrender"};
+        }
+
+        foreach (String label in labelsList) {
+            GameObject temp = Instantiate(textActionMenuButtonPrefab, actionMenuButtonsContainer.transform);
+            temp.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = label;
+        }
+    }
+
     public void ChangeActionText(string newText) {
         actionText.text = "[" + newText + "]";
     }
@@ -99,18 +128,26 @@ public class BattleUIManager : MonoBehaviour
     public void DrawDamageText(int[] damage, Vector3 screenCoords) {
         GameObject[] textObjs = new GameObject[damage.Length];
         for (int i = 0; i < damage.Length; i++) {
-            textObjs[i] = Instantiate(damageTextPrefab, actionMenu.transform.parent);
+            textObjs[i] = Instantiate(damageTextPrefab, actionMenuButtonsContainer.transform.parent.parent);
         }
         StartCoroutine(DrawDamageText(textObjs, damage, screenCoords));
     }
-
     private IEnumerator DrawDamageText(GameObject[] textObjs, int[] damage, Vector3 screenCoords) {
         for (int i = 0; i < damage.Length; i++) {
             Vector2 screenPoint = Camera.main.WorldToScreenPoint(new Vector3(screenCoords.x + .5f, screenCoords.y + 1, screenCoords.z));
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(actionMenu.transform.parent.GetComponent<RectTransform>(), screenPoint, null, out Vector2 canvasPos);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                actionMenuButtonsContainer.transform.parent.parent.GetComponent<RectTransform>(), 
+                screenPoint, 
+                null, 
+                out Vector2 canvasPos
+            );
             textObjs[i].transform.localPosition = canvasPos;
             if (i % 2 == 1) {
-                textObjs[i].transform.localPosition = new Vector3(textObjs[i].transform.localPosition.x - 80, textObjs[i].transform.localPosition.y, textObjs[i].transform.localPosition.z);
+                textObjs[i].transform.localPosition = new Vector3(
+                    textObjs[i].transform.localPosition.x - 80, 
+                    textObjs[i].transform.localPosition.y, 
+                    textObjs[i].transform.localPosition.z
+                );
             }
             textObjs[i].GetComponent<TextMeshProUGUI>().text = damage[i].ToString();
 
@@ -120,7 +157,6 @@ public class BattleUIManager : MonoBehaviour
             yield return new WaitForSeconds(.2f);
         }
     }
-
     private void RemoveDamageText(GameObject damageText, float delayInSeconds) {
         Destroy(damageText, delayInSeconds);
     }
