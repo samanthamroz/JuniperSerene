@@ -2079,7 +2079,6 @@ MonoBehaviour:
   selectedAction: {fileID: 0}
   selectionColor: {r: 1, g: 0.7688679, b: 0.9288825, a: 1}
   selectedColor: {r: 0.6886792, g: 0.5489943, b: 0.6454434, a: 1}
-  isControllerActive: 0
 --- !u!114 &1994643985
 MonoBehaviour:
   m_ObjectHideFlags: 0

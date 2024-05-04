@@ -94,28 +94,65 @@ public class BattleUIManager : MonoBehaviour
     public void DisableActionMenu() {
         actionMenuButtonsContainer.SetActive(false);
     }
-    public void DrawNewActionMenu(List<Weapon> weaponsList = null, String[] labelsList = null) {
-        //actionMenuButtonsContainer = initActionMenuButtonsContainerCopy;
+    public void DrawNewActionMenu(List<Weapon> weaponsList = null, string[] labelsList = null) {
+        List<GameObject> buttonObjects = new List<GameObject>();
+        
+        //Destroy all existing buttons (except basic button container)
+        for (int i = actionMenuButtonsContainer.transform.childCount - 1; i >= 1; i--) {
+            Destroy(actionMenuButtonsContainer.transform.GetChild(i).gameObject);
+        }
+        foreach (Transform child in actionMenuButtonsContainer.transform.GetChild(0))
+        {
+            Destroy(child.gameObject);
+        }
 
+        //Make basic attack buttons
         if (weaponsList == null || weaponsList.Count == 0) {
             actionMenuButtonsContainer.transform.GetChild(0).gameObject.GetComponent<Image>().color = Color.grey;
         } else {
             GameObject basicButtonsContainer = actionMenuButtonsContainer.transform.GetChild(0).gameObject;
             basicButtonsContainer.GetComponent<Image>().color = Color.white;
             foreach (Weapon weapon in weaponsList) {
-                GameObject temp = Instantiate(imageActionMenuButtonPrefab, basicButtonsContainer.transform);
-                temp.transform.GetChild(0).GetComponent<Image>().sprite = weapon.sprite;
+                buttonObjects.Add(Instantiate(imageActionMenuButtonPrefab, basicButtonsContainer.transform));
+                buttonObjects[^1].transform.GetChild(0).GetComponent<Image>().sprite = weapon.sprite;
+                buttonObjects[^1].GetComponent<ActionMenuButton>().actionName = "Basic";
             }
         }
 
+        //Make the left-right double-linked list
+        buttonObjects[0].GetComponent<ActionMenuButton>().left = buttonObjects[0];
+        if (buttonObjects.Count == 2) {
+            buttonObjects[0].GetComponent<ActionMenuButton>().right = buttonObjects[^1];
+            buttonObjects[^1].GetComponent<ActionMenuButton>().left = buttonObjects[0];
+        } else {
+            for (int i = 1; i < buttonObjects.Count - 1; i++) {
+                buttonObjects[i - 1].GetComponent<ActionMenuButton>().right = buttonObjects[i];
+                buttonObjects[i].GetComponent<ActionMenuButton>().left = buttonObjects[i - 1];
+                buttonObjects[i].GetComponent<ActionMenuButton>().right = buttonObjects[i + 1];
+                buttonObjects[i + 1].GetComponent<ActionMenuButton>().left = buttonObjects[i];
+            }
+        }
+        buttonObjects[^1].GetComponent<ActionMenuButton>().right = buttonObjects[^1];
+        
+        //Make text buttons
         if (labelsList == null) {
-            labelsList = new string[] {"Attacks", "Abilities", "Retreat", "Surrender"};
+            labelsList = new string[] {"Attacks", "Abilities", "Move", "Surrender"};
+        }
+        foreach (string label in labelsList) {
+            buttonObjects.Add(Instantiate(textActionMenuButtonPrefab, actionMenuButtonsContainer.transform));
+            buttonObjects[^1].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = label;
+            buttonObjects[^1].GetComponent<ActionMenuButton>().actionName = label;
         }
 
-        foreach (String label in labelsList) {
-            GameObject temp = Instantiate(textActionMenuButtonPrefab, actionMenuButtonsContainer.transform);
-            temp.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = label;
+        //Make prev-next double-linked list
+        buttonObjects[0].GetComponent<ActionMenuButton>().prev = buttonObjects[0];
+        for (int i = 1; i < buttonObjects.Count - 1; i++) {
+            buttonObjects[i - 1].GetComponent<ActionMenuButton>().next = buttonObjects[i];
+            buttonObjects[i].GetComponent<ActionMenuButton>().prev = buttonObjects[i - 1];
+            buttonObjects[i].GetComponent<ActionMenuButton>().next = buttonObjects[i + 1];
+            buttonObjects[i + 1].GetComponent<ActionMenuButton>().prev = buttonObjects[i];
         }
+        buttonObjects[^1].GetComponent<ActionMenuButton>().next = buttonObjects[^1];
     }
 
     public void ChangeActionText(string newText) {

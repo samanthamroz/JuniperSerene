@@ -140,6 +140,7 @@ public class BattleManager : MonoBehaviour
         bui = gameObject.GetComponent<BattleUIManager>();
         ba = gameObject.GetComponent<BattleAnimations>();
         bc = gameObject.GetComponent<BattleController>();
+        bc.StartController();
 
         //initialize 1st turn order
         CreateNextTurnOrder();
@@ -263,13 +264,13 @@ public class BattleManager : MonoBehaviour
         List<GameObject> getEligibleTargets(int actionCode): returns the current list of eligible targets for the given action code
         HandleTargettedAction(int actionCode, CCB target): executes targetted actions
     */
-    public List<Character> GetActionTargets(float actionCode) {
+    public List<Character> GetActionTargets(int actionCode) {
         List<Character> targets = new List<Character>();
 
         switch (actionCode) {
-            case -1:
+            case 0:
                 break;
-            case 99:
+            case 9:
                 break;
             default:
                 if (playersInFront.Contains(curr) || enemiesInBack.Contains(curr)) {
@@ -290,11 +291,15 @@ public class BattleManager : MonoBehaviour
         bui.DisableActionMenu();
         bool success = true;
         switch (actionCode) {
-            case -1:
+            case 9:
                 bui.ChangeActionText("Move");
                 success = Move();
                 break;
-            case 99:
+            case 4:
+                bui.ChangeActionText("Item");
+                //Item
+                break;
+            case 0:
                 bui.ChangeActionText("Surrender");
                 //Surrender
                 break;
@@ -311,6 +316,14 @@ public class BattleManager : MonoBehaviour
             case 1:
                 bui.ChangeActionText("Attack");
                 StartCoroutine(BasicAttack(target));
+                break;
+            case 2:
+                bui.ChangeActionText("Attacks");
+                StartCoroutine(BasicAttack(target)); //put logic here
+                break;
+            case 3:
+                bui.ChangeActionText("Abilities");
+                StartCoroutine(BasicAttack(target)); //put logic here
                 break;
             default:
                 throw new Exception("Invalid action code");

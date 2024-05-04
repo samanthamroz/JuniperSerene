@@ -12,7 +12,7 @@ public class BattleController : MonoBehaviour
     //Action Menu Variables
     [SerializeField] private GameObject actionMenuButtonsContainer, selectedAction;
     public Color selectionColor, selectedColor;
-    private float actionCode;
+    private int actionCode;
     private bool isInActionMenu;
     private bool isControllerActive;
 
@@ -29,8 +29,6 @@ public class BattleController : MonoBehaviour
 
     public void StartController() {
         bm = gameObject.GetComponent<BattleManager>();
-
-        RestartController();
     }
 
     public void StopController() {
@@ -38,6 +36,14 @@ public class BattleController : MonoBehaviour
     }
 
     public void RestartController() {
+        StartCoroutine(ChooseNewSelectedAction());
+        isControllerActive = true;
+        isInActionMenu = true;
+    }
+
+    private IEnumerator ChooseNewSelectedAction() {
+        yield return null;
+        
         if (actionMenuButtonsContainer.transform.GetChild(0).childCount > 0) {
             selectedAction = actionMenuButtonsContainer.transform.GetChild(0).GetChild(0).gameObject;
         } else {
@@ -54,11 +60,7 @@ public class BattleController : MonoBehaviour
             selectedAction = validButtonFound.gameObject;
         }
         selectedAction.GetComponent<Image>().color = selectionColor;
-
-        isControllerActive = true;
-        isInActionMenu = true;
     }
-
     private void OnNavigate(InputValue value) {
         if (!isControllerActive) {
             return;
@@ -146,8 +148,8 @@ public class BattleController : MonoBehaviour
 
             //go back to action menu mode
             selectedAction.GetComponent<Image>().color = selectionColor;
-            selectedTarget = null;
             selectedTargetArrow.SetActive(false);
+            selectedTarget = null;
 
             isInActionMenu = true;
         }
