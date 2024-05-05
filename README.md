@@ -4,14 +4,16 @@ A turn-based, character-focused RPG set in a diverse world full of dryads, faeri
 
 ## Development Roadmap
 
-March 22nd, 2024: Unity project created
-April 2nd, 2024: (private) GDD created
-# We're currently here ↓
-Late May 2024: MVP completed (for battle system)
-Mid June 2024: Battle system MVP publicly playable
-August 2024: Begin working on worldspace MVP
-December 2024: MVP completed (for worldspace, integrated with battle system)
-Beginning of 2025: Full MVP publicly playable
+* March 22nd, 2024: Unity project created
+* April 2nd, 2024: (private) GDD created
+
+**We're currently here ↓**
+
+* Late May 2024: MVP completed (for battle system)
+* Mid June 2024: Battle system MVP publicly playable
+* August 2024: Begin working on worldspace MVP
+* December 2024: MVP completed (for worldspace, integrated with battle system)
+* Beginning of 2025: Full MVP publicly playable
 
 ## Built With
 
@@ -19,9 +21,9 @@ Beginning of 2025: Full MVP publicly playable
 
 ## Contributions
 
-Placeholder character art: [@ahruon on Tumblr](https://ahruon.tumblr.com/)
-Placeholder weapon sprites: [@RavenTale on Itch](https://itch.io/profile/raventale)
-Placeholder background: [Artist unknown](https://www.reddit.com/r/PokemonRMXP/comments/v7hz6t/how_can_i_make_custom_battle_backgrounds/)
+* Placeholder character art: [@ahruon on Tumblr](https://ahruon.tumblr.com/)
+* Placeholder weapon sprites: [@RavenTale on Itch](https://itch.io/profile/raventale)
+* Placeholder background: [Artist unknown](https://www.reddit.com/r/PokemonRMXP/comments/v7hz6t/how_can_i_make_custom_battle_backgrounds/)
 
 ## Authors
 
