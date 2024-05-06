@@ -92,7 +92,6 @@ public class BattleActionsManager : MonoBehaviour
         bui.UpdateHealthBar(target);
 
         ba.Attack(attacker.gameObject);
-        /*
         ba.Hurt(target.gameObject);
         if (totalDamageDone.Length > 1) {
             for (int i = 1; i < totalDamageDone.Length; i++) {
@@ -111,7 +110,7 @@ public class BattleActionsManager : MonoBehaviour
                 ba.FinishAttack(attacker.gameObject);
             }
         }
-        */
+        
         yield return null;
     }
 

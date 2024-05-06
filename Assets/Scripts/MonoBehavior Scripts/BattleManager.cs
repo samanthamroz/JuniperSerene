@@ -329,16 +329,15 @@ public class BattleManager : MonoBehaviour
 
         bam.PerformAction(action, curr, target);
 
-        EndCurrentAction();
+        Invoke(nameof(EndCurrentAction), 1f);
     }
     public void DoAction(BattleAction action, Character target, Weapon weapon) {
         bui.DisableActionMenu();
 
         bam.PerformAction(action, curr, target, weapon);
 
-        EndCurrentAction();
+        Invoke(nameof(EndCurrentAction), 1f);
     }
-
     private void DoEnemyAction() {
         Character chosenPlayer = playersInFront[UnityEngine.Random.Range(0, playersInFront.Count)];
         int rand = UnityEngine.Random.Range(1, 11);
@@ -354,7 +353,6 @@ public class BattleManager : MonoBehaviour
 
     /*
     Action Functions:                 
-        
     */
     public bool Move() {
         return Move(curr);
