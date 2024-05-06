@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.UI;
+using UnityEditor;
 
 public class BattleInitializer : MonoBehaviour
 {
     public GameObject characterPrefab;
+    public List<BattleAction> actionsList;
     private BattleManager bm;
-    private BattleController bc;
     private BattleUIManager bui;
     void Start()
     {
         bm = gameObject.GetComponent<BattleManager>();
-        bc = gameObject.GetComponent<BattleController>();
         bui = gameObject.GetComponent<BattleUIManager>();
 
         bui.DrawNewHealthBars(bm.playerParty);

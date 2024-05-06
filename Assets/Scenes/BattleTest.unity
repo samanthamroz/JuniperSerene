@@ -657,7 +657,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: Placeholder Text
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1316,8 +1316,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 70.36, y: 68.195}
-  m_SizeDelta: {x: 150, y: -156.39}
+  m_AnchoredPosition: {x: 70.36, y: 0.19999695}
+  m_SizeDelta: {x: 150, y: -20.400013}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &839909637
 MonoBehaviour:
@@ -2037,8 +2037,9 @@ GameObject:
   - component: {fileID: 1994643983}
   - component: {fileID: 1994643985}
   - component: {fileID: 1994643986}
-  - component: {fileID: 1994643988}
   - component: {fileID: 1994643984}
+  - component: {fileID: 1994643990}
+  - component: {fileID: 1994643988}
   - component: {fileID: 1994643989}
   - component: {fileID: 1994643987}
   m_Layer: 0
@@ -2127,6 +2128,8 @@ MonoBehaviour:
   enemiesBack: {fileID: 2050180894}
   enemyParty: {fileID: 11400000, guid: 1d2ba932eae366946b71ed033dd52261, type: 2}
   playerParty: {fileID: 11400000, guid: fe6bc0b8fc302b94a87ca4ebe9c5f8e4, type: 2}
+  currBattleActions: []
+  basicBattleMenu: {fileID: 11400000, guid: ea69e459d43eb6e4fb8a77bef513c6fb, type: 2}
 --- !u!114 &1994643987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2140,6 +2143,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterPrefab: {fileID: 2967074875404645516, guid: 4302b41cee705b14c88fee8808ff90c0, type: 3}
+  actionsList:
+  - {fileID: 11400000, guid: cbf6e28afa6266e4b8be0f589c6b0817, type: 2}
+  - {fileID: 11400000, guid: 1033e470b121c684cb3d8948d0d93177, type: 2}
+  - {fileID: 11400000, guid: fede136b098cb094c9ed20de94fd0dc7, type: 2}
+  - {fileID: 11400000, guid: e0439640f1445d449b5b01c8a9b64545, type: 2}
+  - {fileID: 11400000, guid: 96d53ebccd9649f44b7754ad004c7263, type: 2}
+  - {fileID: 11400000, guid: 8a9e9b391a423ca41bb708283c0063c5, type: 2}
+  - {fileID: 11400000, guid: 76a478a1e10b16a4898ee42e813863ec, type: 2}
+  - {fileID: 11400000, guid: d6f0222bdf85ab946bc2b4f9d136fc4d, type: 2}
 --- !u!114 &1994643988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2156,6 +2168,7 @@ MonoBehaviour:
   nextTurnContainer: {fileID: 205765092}
   healthBarsContainer: {fileID: 164564908}
   actionMenuButtonsContainer: {fileID: 635626306}
+  tabInformationContainer: {fileID: 839909635}
   characterImagePrefab: {fileID: 5472003476447679981, guid: 52b91860866e1b04f8619ab7af2ae969, type: 3}
   healthBarPrefab: {fileID: 2175689105868939636, guid: 0282531f32710394399e71e72a9641e8, type: 3}
   damageTextPrefab: {fileID: 2766730991961970700, guid: a420e7cbdcd97e242a9b29875713fa5a, type: 3}
@@ -2172,6 +2185,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 83f610a9ad3d8944296907f3e7d5907d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1994643990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1994643982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7df38c831ad1a84d9226901c860a6e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2012745802

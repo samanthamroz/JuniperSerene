@@ -23,7 +23,7 @@ public class Weapon : ScriptableObject
         hasAugment = false;
     }
 
-    public virtual int[] DoBasicAttack() {
+    public virtual int[] GetBasicAttackDamage() {
         int[] damageList = {damage};
         return damageList;
     }

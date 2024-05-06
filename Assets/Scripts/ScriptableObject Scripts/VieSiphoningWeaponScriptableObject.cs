@@ -7,7 +7,7 @@ public class VieSiphoningWeapon : Weapon
     {
         hasAugment = true;
     }
-    public int[] DoBasicAttack(Character attackingCharacter) {
+    public override int[] GetBasicAttackDamage() {
         return new int[] {damage};
     }
 }

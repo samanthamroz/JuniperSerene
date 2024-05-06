@@ -18,13 +18,16 @@ MonoBehaviour:
   weaponsList:
   - {fileID: 11400000, guid: 19ff5ea11dea9c74bbdaeab85cd46fa5, type: 2}
   - {fileID: 11400000, guid: 144a559e1bb7c1e4ea4777f142ad1366, type: 2}
-  attacksList: []
-  abilitiesList: []
+  attacksList:
+  - {fileID: 11400000, guid: 1033e470b121c684cb3d8948d0d93177, type: 2}
+  abilitiesList:
+  - {fileID: 11400000, guid: cbf6e28afa6266e4b8be0f589c6b0817, type: 2}
   isInFront: 1
   isPlayable: 1
   name: Lenoir
+  role: Scholar
   sprite: {fileID: -1569377248, guid: 08333cefcc4061d4394d09ba9c6f9600, type: 3}
   uiSprite: {fileID: 21300000, guid: ed511d1d547e0ee46b8ea82f064d155e, type: 3}
   gameObject: {fileID: 0}
-  next: {fileID: 11400000, guid: cbea704980c84f349bf8b2cb758641ec, type: 2}
-  prev: {fileID: 11400000, guid: cbea704980c84f349bf8b2cb758641ec, type: 2}
+  next: {fileID: 11400000, guid: 9c91af249edacd743aa041083b6b0102, type: 2}
+  prev: {fileID: 11400000, guid: f098c9fc7e90f0c4ea08f26f7897305e, type: 2}

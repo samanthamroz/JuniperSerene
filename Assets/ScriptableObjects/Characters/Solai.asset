@@ -19,13 +19,16 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d75f16fe57e86004fbc093f4fc0b2a29, type: 2}
   - {fileID: 11400000, guid: 342cbf2bce45323439165aa235125f3e, type: 2}
   - {fileID: 11400000, guid: 26eae4b6e6753b649bb97083b657432a, type: 2}
-  attacksList: []
-  abilitiesList: []
+  attacksList:
+  - {fileID: 11400000, guid: 1033e470b121c684cb3d8948d0d93177, type: 2}
+  abilitiesList:
+  - {fileID: 11400000, guid: cbf6e28afa6266e4b8be0f589c6b0817, type: 2}
   isInFront: 1
   isPlayable: 1
   name: Solai
+  role: Warrior
   sprite: {fileID: -1345441280, guid: 08333cefcc4061d4394d09ba9c6f9600, type: 3}
   uiSprite: {fileID: 21300000, guid: 6f84b5af1a99b3b4f89266c78adab2f1, type: 3}
   gameObject: {fileID: 0}
   next: {fileID: 11400000, guid: 1d9dfaa6c2f72324aa1ee29c9a3b5005, type: 2}
-  prev: {fileID: 11400000, guid: 9c91af249edacd743aa041083b6b0102, type: 2}
+  prev: {fileID: 11400000, guid: cbea704980c84f349bf8b2cb758641ec, type: 2}

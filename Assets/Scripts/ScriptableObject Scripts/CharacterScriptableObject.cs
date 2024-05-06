@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using BattleSystem;
 
 [CreateAssetMenu(fileName = "CharacterScriptableObject", menuName = "ScriptableObjects/Character")]
 public class Character : ScriptableObject
@@ -10,15 +9,15 @@ public class Character : ScriptableObject
 
     //INVENTORY
     public List<Weapon> weaponsList;
-
-    //BATTLE ACTIONS
-    public List<Action> attacksList, abilitiesList;
+    public List<BattleAction> attacksList;
+    public List<BattleAction> abilitiesList;
     
     //BATTLE POSITIONING
     public bool isInFront, isPlayable;
 
     //BATTLE DISPLAY PROPERTIES
     public new string name;
+    public string role;
     public Sprite sprite, uiSprite;
 
     //REFERENCES TO OBJECTS IN SCENE
@@ -30,7 +29,7 @@ public class Character : ScriptableObject
         currentHealth = maxHealth;
         currentVie = currentHealth;
     }
-    
+
     public void BattleReset(bool resetHealth) {
         if (resetHealth) {
             OnValidate();
@@ -38,27 +37,5 @@ public class Character : ScriptableObject
         gameObject = null;
         next = null;
         prev = null;
-    }
-
-    //Battle Functions
-    public void Hurt(int damageDone) {
-        currentHealth -= damageDone;
-        if (currentVie > currentHealth) {
-            currentVie = currentHealth;
-        }
-    }
-
-    public int[] BasicAttack(Character target, int weaponIndex) {
-        int[] totalDamageDone = new int[1];
-        try {
-            Weapon weapon = weaponsList[weaponIndex];
-            totalDamageDone = weapon.DoBasicAttack();
-            foreach (int damage in totalDamageDone) {
-                target.Hurt(damage);
-            }
-        } catch (System.IndexOutOfRangeException) {
-            Debug.Log("Bad weapon index for BasicAttack(). No damage awarded.");
-        }
-        return totalDamageDone;
     }
 }

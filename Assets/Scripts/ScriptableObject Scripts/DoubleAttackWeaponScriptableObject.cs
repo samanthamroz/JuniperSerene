@@ -7,7 +7,7 @@ public class DoubleAttackWeapon : Weapon
     {
         hasAugment = true;
     }
-    public override int[] DoBasicAttack() {
+    public override int[] GetBasicAttackDamage() {
         return new int[] {damage,damage};
     }
 }

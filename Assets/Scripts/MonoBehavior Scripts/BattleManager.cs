@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
+using UnityEditor;
 
 public class BattleManager : MonoBehaviour
 {
@@ -24,9 +26,12 @@ public class BattleManager : MonoBehaviour
         }
     }
     private List<Character> currentTurn, nextTurn;
-    private Character curr {
+    [SerializeField] public Character curr {
         get { return currentTurn[0]; }
     }
+    public List<BattleAction> currBattleActions;
+    public BattleMenu basicBattleMenu;
+    private BattleActionsManager bam;
     private BattleUIManager bui;
     private BattleAnimations ba;
     private BattleController bc;
@@ -128,6 +133,7 @@ public class BattleManager : MonoBehaviour
             NewCharacterPosition(enemy);
         }
     }
+    
     /*
     Turn Management:
         StartBattle(): called at the end of Start() in the BattleInitializer script. populates char lists and nextTurn
@@ -137,6 +143,7 @@ public class BattleManager : MonoBehaviour
         EndCurrentAction(): called at the end of all action functions. checks for battle end conditions and either calls StartNextAction() or StartNextTurn()
     */
     public void StartBattle() {
+        bam = gameObject.GetComponent<BattleActionsManager>();
         bui = gameObject.GetComponent<BattleUIManager>();
         ba = gameObject.GetComponent<BattleAnimations>();
         bc = gameObject.GetComponent<BattleController>();
@@ -148,7 +155,7 @@ public class BattleManager : MonoBehaviour
         //Start first turn
         StartNextTurn();
     }
-    public void CreateNextTurnOrder() {
+    private void CreateNextTurnOrder() {
         nextTurn = new List<Character>();
 
         List<Character> allCharactersCopy = allCharacters;
@@ -158,7 +165,7 @@ public class BattleManager : MonoBehaviour
             allCharactersCopy.RemoveAt(randIndex);
         }
     }
-    public void StartNextTurn() {
+    private void StartNextTurn() {
         //Update/display current turn order and get/display next turn order
         currentTurn = nextTurn;
         CreateNextTurnOrder();
@@ -167,7 +174,7 @@ public class BattleManager : MonoBehaviour
         //start first action
         StartNextAction();
     }
-    public void StartNextAction() {
+    private void StartNextAction() {
         //Write stuff into menu if character is playable, else disable menu and choose enemy action
         if (enemyParty.partyCharacters.Contains(curr)) {
             bui.DisableActionMenu();
@@ -175,14 +182,14 @@ public class BattleManager : MonoBehaviour
             Invoke(nameof(DoEnemyAction), ba.TurnStart(curr.gameObject));
         } else {
             bui.EnableActionMenu();
-            bui.DrawNewActionMenu(curr.weaponsList);
+            CreateBaseBattleMenu();
             bc.RestartController();
             ba.TurnStart(curr.gameObject);
             //write options into menu
             //wait for UI input
         }
     }
-    public void EndCurrentAction() {
+    private void EndCurrentAction() {
         bc.StopController();
 
         //check for dead players
@@ -215,7 +222,11 @@ public class BattleManager : MonoBehaviour
             }
         }
     }
-    public void HandleDeadEnemies() {
+    
+    /*
+    Turn Management Helper Functions:
+    */
+    private void HandleDeadEnemies() {
         //check for dead enemies
         List<Character> deadEnemies = new List<Character>();
         foreach (Character enemy in enemyParty.partyCharacters) {
@@ -259,89 +270,83 @@ public class BattleManager : MonoBehaviour
             enemiesInBack = new List<Character>();
         }
     }
+    private void CreateBaseBattleMenu() {
+        currBattleActions = new List<BattleAction>();
+        foreach (Weapon weapon in curr.weaponsList) {
+            currBattleActions.Add(basicBattleMenu.basicBattleAction);
+        }
+        foreach (BattleAction action in basicBattleMenu.menuActions) {
+            currBattleActions.Add(action);
+        }
+
+        //basicBattleMenu contains both Advance and Retreat, so we have to get rid of one
+        if (curr.isInFront) {
+            currBattleActions.RemoveAt(currBattleActions.Count - 3); //remove Advance
+        } else {
+            currBattleActions.RemoveAt(currBattleActions.Count - 2); //remove Retreat
+        }
+        bui.DrawNewActionMenu(currBattleActions, curr, true);
+    }
+    private void CreateBattleSubMenu() {
+        bui.DrawNewActionMenu(currBattleActions, curr, false);
+    }
+
     /*
-    Helper Functions for BattleController's action codes
+    Helper Functions for BattleController's functions involving action codes
         List<GameObject> getEligibleTargets(int actionCode): returns the current list of eligible targets for the given action code
         HandleTargettedAction(int actionCode, CCB target): executes targetted actions
     */
-    public List<Character> GetActionTargets(int actionCode) {
+    public List<Character> GetActionTargets(BattleAction action) {
         List<Character> targets = new List<Character>();
 
-        switch (actionCode) {
-            case 0:
-                break;
-            case 9:
-                break;
-            default:
-                if (playersInFront.Contains(curr) || enemiesInBack.Contains(curr)) {
-                    foreach (Character enemy in enemiesInFront) {
-                        targets.Add(enemy);
-                    }
-                } else if (enemiesInFront.Contains(curr) || playersInBack.Contains(curr)) {
-                    foreach (Character player in playersInFront) {
-                        targets.Add(player);
-                    }
+        if (action.needsTarget) {
+            if (playersInFront.Contains(curr) || enemiesInBack.Contains(curr)) {
+                foreach (Character enemy in enemiesInFront) {
+                    targets.Add(enemy);
                 }
-                break;
+            } else if (enemiesInFront.Contains(curr) || playersInBack.Contains(curr)) {
+                foreach (Character player in playersInFront) {
+                    targets.Add(player);
+                }
+            }
         }
 
         return targets;
     }
-    public void DoAction(float actionCode) {
+    public void DoAction(BattleAction action) {
         bui.DisableActionMenu();
-        bool success = true;
-        switch (actionCode) {
-            case 9:
-                bui.ChangeActionText("Move");
-                success = Move();
-                break;
-            case 4:
-                bui.ChangeActionText("Item");
-                //Item
-                break;
-            case 0:
-                bui.ChangeActionText("Surrender");
-                //Surrender
-                break;
-            default:
-                throw new Exception("Action code needs target");
-        }
-        if (success) {
-            EndCurrentAction();
-        }
-    }
-    public void DoAction(float actionCode, Character target) {
-        bui.DisableActionMenu();
-        switch (actionCode) {
-            case 1:
-                bui.ChangeActionText("Attack");
-                StartCoroutine(BasicAttack(target));
-                break;
-            case 2:
-                bui.ChangeActionText("Attacks");
-                StartCoroutine(BasicAttack(target)); //put logic here
-                break;
-            case 3:
-                bui.ChangeActionText("Abilities");
-                StartCoroutine(BasicAttack(target)); //put logic here
-                break;
-            default:
-                throw new Exception("Invalid action code");
-        }
-        Invoke("EndCurrentAction", 1f);
-    }
-    public void DoEnemyAction() {
-        bool success = false;
 
+        if (!action.needsTarget) {
+            bam.PerformAction(action, curr);
+        } else {
+            throw new Exception("Action code needs target");
+        }
+
+        EndCurrentAction();
+    }
+    public void DoAction(BattleAction action, Character target) {
+        bui.DisableActionMenu();
+
+        bam.PerformAction(action, curr, target);
+
+        EndCurrentAction();
+    }
+    public void DoAction(BattleAction action, Character target, Weapon weapon) {
+        bui.DisableActionMenu();
+
+        bam.PerformAction(action, curr, target, weapon);
+
+        EndCurrentAction();
+    }
+
+    private void DoEnemyAction() {
         Character chosenPlayer = playersInFront[UnityEngine.Random.Range(0, playersInFront.Count)];
         int rand = UnityEngine.Random.Range(1, 11);
         if (rand > 8) {
             bui.ChangeActionText("Move");
-            success = Move();
-        }
-        if (!success) {
-            bui.ChangeActionText("Attack");
-            StartCoroutine(BasicAttack(chosenPlayer));
+            Move();
+        } else {
+            bam.PerformAction(basicBattleMenu.basicBattleAction, curr, chosenPlayer, curr.weaponsList[0]);
         }
 
         Invoke(nameof(EndCurrentAction), 1f);
@@ -351,34 +356,7 @@ public class BattleManager : MonoBehaviour
     Action Functions:                 
         
     */
-    private IEnumerator BasicAttack(Character target) {
-        //actual attack
-        int[] damageDone = curr.BasicAttack(target, 0);
-
-        //visual feedback
-        ba.Attack(curr.gameObject);
-        ba.Hurt(target.gameObject);
-        bui.DrawDamageText(damageDone, target.gameObject.transform.position);
-        bui.UpdateHealthBar(target);
-        if (damageDone.Length > 1) {
-            for (int i = 1; i < damageDone.Length; i++) {
-                yield return new WaitForSeconds(0.2f);
-                ba.Attack(curr.gameObject);
-                ba.Hurt(target.gameObject);
-            }
-        }
-
-        yield return new WaitForSeconds(0.2f + ((damageDone.Length - 1) * 0.2f));
-
-        ba.FinishAttack(curr.gameObject);
-        if (damageDone.Length > 1) {
-            for (int i = 1; i < damageDone.Length; i++) {
-                yield return new WaitForSeconds(0.2f);
-                ba.FinishAttack(curr.gameObject);
-            }
-        }
-    }
-    private bool Move() {
+    public bool Move() {
         return Move(curr);
     }
     private bool Move(Character moving) {

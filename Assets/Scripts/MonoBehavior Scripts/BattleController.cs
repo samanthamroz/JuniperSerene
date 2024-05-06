@@ -12,7 +12,6 @@ public class BattleController : MonoBehaviour
     //Action Menu Variables
     [SerializeField] private GameObject actionMenuButtonsContainer, selectedAction;
     public Color selectionColor, selectedColor;
-    private int actionCode;
     private bool isInActionMenu;
     private bool isControllerActive;
 
@@ -30,17 +29,14 @@ public class BattleController : MonoBehaviour
     public void StartController() {
         bm = gameObject.GetComponent<BattleManager>();
     }
-
     public void StopController() {
         isControllerActive = false;
     }
-
     public void RestartController() {
         StartCoroutine(ChooseNewSelectedAction());
         isControllerActive = true;
         isInActionMenu = true;
     }
-
     private IEnumerator ChooseNewSelectedAction() {
         yield return null;
         
@@ -60,7 +56,9 @@ public class BattleController : MonoBehaviour
             selectedAction = validButtonFound.gameObject;
         }
         selectedAction.GetComponent<Image>().color = selectionColor;
+        gameObject.GetComponent<BattleUIManager>().UpdateTab(selectedAction);
     }
+    
     private void OnNavigate(InputValue value) {
         if (!isControllerActive) {
             return;
@@ -70,12 +68,11 @@ public class BattleController : MonoBehaviour
 
         if (isInActionMenu) {
             ActionMenuControls(input);
+            gameObject.GetComponent<BattleUIManager>().UpdateTab(selectedAction);
         } else {
             TargetMenuControls(input);
-            
         }
     }
-
     private void ActionMenuControls(Vector2 input) {
         selectedAction.GetComponent<Image>().color = new Color(1,1,1);
 
@@ -99,7 +96,6 @@ public class BattleController : MonoBehaviour
 
         selectedAction.GetComponent<Image>().color = selectionColor;
     }
-
     private void TargetMenuControls(Vector2 input) {
         selectedTargetArrow.SetActive(false);
 
@@ -121,30 +117,34 @@ public class BattleController : MonoBehaviour
     }
 
     private void OnSubmit() {
+        BattleAction currAction = selectedAction.GetComponent<ActionMenuButton>().associatedAction;
+
         if (!isControllerActive) {
             return;
         }
 
         if (isInActionMenu) {
-            //save action code selected
-            actionCode = selectedAction.GetComponent<ActionMenuButton>().actionCode;
-
             //get eligible targets for action code
-            List<Character> targets = bm.GetActionTargets(actionCode);
-                
+            List<Character> targets = bm.GetActionTargets(currAction);
+
             //do actionCode if it does not require a target, else go to target selection mode
-            if (targets.Count == 0) {
-                bm.DoAction(actionCode); 
-            } else {
+            if (!currAction.needsTarget && targets.Count == 0) {
+                bm.DoAction(currAction); 
+            } else if (currAction.needsTarget && targets.Count > 0 ) {
                 selectedAction.GetComponent<Image>().color = selectedColor;
                 selectedTarget = targets[0];
                 selectedTargetArrow.SetActive(true);
                 
                 isInActionMenu = false;
+            } else {
+                throw new Exception("Something funky when OnSubmit()");
             }
         } else {
-            //do the action based on actionCode to the selected target
-            bm.DoAction(actionCode, selectedTarget);
+            if (selectedAction.GetComponent<ActionMenuButton>().associatedWeapon != null) {
+                bm.DoAction(currAction, selectedTarget, selectedAction.GetComponent<ActionMenuButton>().associatedWeapon);
+            } else {
+                bm.DoAction(currAction, selectedTarget);
+            }
 
             //go back to action menu mode
             selectedAction.GetComponent<Image>().color = selectionColor;
@@ -173,6 +173,6 @@ public class BattleController : MonoBehaviour
             return;
         }
 
-        Debug.Log("Tab");
+        gameObject.GetComponent<BattleUIManager>().ToggleTab(selectedAction);
     }
 }
