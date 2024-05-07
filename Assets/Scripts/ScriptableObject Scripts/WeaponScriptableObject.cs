@@ -5,8 +5,8 @@ public class Weapon : ScriptableObject
 {
     public new string name;
     public int damage;
-    public type weaponType;
-    public enum type
+    public WeaponType weaponType;
+    public enum WeaponType
     {
         SWORD,
         DAGGER,

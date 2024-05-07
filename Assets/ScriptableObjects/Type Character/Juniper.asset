@@ -18,7 +18,7 @@ MonoBehaviour:
   weaponsList:
   - {fileID: 11400000, guid: 8c5127fce43528a479304c2737e13adc, type: 2}
   attacksList:
-  - {fileID: 11400000, guid: 1033e470b121c684cb3d8948d0d93177, type: 2}
+  - {fileID: 11400000, guid: df258c639f31871418050860946441bb, type: 2}
   abilitiesList:
   - {fileID: 11400000, guid: cbf6e28afa6266e4b8be0f589c6b0817, type: 2}
   isInFront: 1
@@ -28,5 +28,5 @@ MonoBehaviour:
   sprite: {fileID: -646126376, guid: 08333cefcc4061d4394d09ba9c6f9600, type: 3}
   uiSprite: {fileID: 21300000, guid: d31924f52ecb0b54fb3a3361c2c52828, type: 3}
   gameObject: {fileID: 0}
-  next: {fileID: 11400000, guid: f098c9fc7e90f0c4ea08f26f7897305e, type: 2}
+  next: {fileID: 11400000, guid: 1d9dfaa6c2f72324aa1ee29c9a3b5005, type: 2}
   prev: {fileID: 11400000, guid: 9c91af249edacd743aa041083b6b0102, type: 2}

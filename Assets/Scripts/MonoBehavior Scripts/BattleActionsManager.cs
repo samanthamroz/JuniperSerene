@@ -16,34 +16,34 @@ public class BattleActionsManager : MonoBehaviour
         bm = gameObject.GetComponent<BattleManager>();
     }
 
-    public void PerformAction(BattleAction action, Character attacker) {
+    public bool IsPerformActionSuccessful(BattleAction action, Character attacker) {
         if (action.needsTarget || action.needsWeapon) {
             throw new System.Exception("Needs target and/or weapon");
         }
         switch (action.displayName) {
             case "Attacks":
-                Debug.Log("Show attacks");
-                break;
+                bui.DrawNewActionMenu(attacker.attacksList, attacker, false);
+                return false;
             case "Abilities":
-                Debug.Log("Show abilties");
-                break;
+                bui.DrawNewActionMenu(attacker.abilitiesList, attacker, false);
+                return false;
             case "Retreat":
                 bui.ChangeActionText("Retreat");
                 bm.Move();
-                break;
+                return true;
             case "Advance":
                 bui.ChangeActionText("Advance");
                 bm.Move();
-                break;
+                return true;
             case "Surrender":
                 Surrender();
-                break;
+                return true;
             default:
                 throw new System.Exception("Action name is undefined");
         }
     }
 
-    public void PerformAction(BattleAction action, Character attacker, Character target) {
+    public bool IsPerformActionSuccessful(BattleAction action, Character attacker, Character target) {
         if (!action.needsTarget || action.needsWeapon) {
             throw new System.Exception("Doesn't need target and/or needs weapon");
         }
@@ -54,14 +54,14 @@ public class BattleActionsManager : MonoBehaviour
         }
     }
 
-    public void PerformAction(BattleAction action, Character attacker, Character target, Weapon weapon) {
+    public bool IsPerformActionSuccessful(BattleAction action, Character attacker, Character target, Weapon weapon) {
         if (!action.needsTarget || !action.needsWeapon) {
             throw new System.Exception("Doesn't need target and/or weapon");
         }
         switch (action.displayName) {
             case "":
                 StartCoroutine(BasicAttack(attacker, target, weapon));
-                break;
+                return true;
             default:
                 throw new System.Exception("Action name is undefined");
         }

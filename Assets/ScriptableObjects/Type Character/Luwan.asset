@@ -18,7 +18,7 @@ MonoBehaviour:
   weaponsList:
   - {fileID: 11400000, guid: 322bd8e2c386ece4fa0358f6aefb8412, type: 2}
   attacksList:
-  - {fileID: 11400000, guid: 1033e470b121c684cb3d8948d0d93177, type: 2}
+  - {fileID: 11400000, guid: df258c639f31871418050860946441bb, type: 2}
   abilitiesList:
   - {fileID: 11400000, guid: cbf6e28afa6266e4b8be0f589c6b0817, type: 2}
   isInFront: 1

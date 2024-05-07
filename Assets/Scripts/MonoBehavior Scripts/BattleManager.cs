@@ -189,6 +189,10 @@ public class BattleManager : MonoBehaviour
             //wait for UI input
         }
     }
+    private void ContinueCurrAction() {
+        bui.EnableActionMenu();
+        bc.RestartController();
+    }
     private void EndCurrentAction() {
         bc.StopController();
 
@@ -316,27 +320,36 @@ public class BattleManager : MonoBehaviour
     public void DoAction(BattleAction action) {
         bui.DisableActionMenu();
 
-        if (!action.needsTarget) {
-            bam.PerformAction(action, curr);
-        } else {
+        if (action.needsTarget) {
             throw new Exception("Action code needs target");
         }
 
-        EndCurrentAction();
+        if (bam.IsPerformActionSuccessful(action, curr)) {
+            Invoke(nameof(EndCurrentAction), 1f);
+            return;
+        }
+
+        ContinueCurrAction();
     }
     public void DoAction(BattleAction action, Character target) {
         bui.DisableActionMenu();
 
-        bam.PerformAction(action, curr, target);
+        if (bam.IsPerformActionSuccessful(action, curr, target)) {
+            Invoke(nameof(EndCurrentAction), 1f);
+            return;
+        }
 
-        Invoke(nameof(EndCurrentAction), 1f);
+        ContinueCurrAction();
     }
     public void DoAction(BattleAction action, Character target, Weapon weapon) {
         bui.DisableActionMenu();
 
-        bam.PerformAction(action, curr, target, weapon);
+        if (bam.IsPerformActionSuccessful(action, curr, target, weapon)) {
+            Invoke(nameof(EndCurrentAction), 1f);
+            return;
+        }
 
-        Invoke(nameof(EndCurrentAction), 1f);
+        ContinueCurrAction();
     }
     private void DoEnemyAction() {
         Character chosenPlayer = playersInFront[UnityEngine.Random.Range(0, playersInFront.Count)];
@@ -345,7 +358,7 @@ public class BattleManager : MonoBehaviour
             bui.ChangeActionText("Move");
             Move();
         } else {
-            bam.PerformAction(basicBattleMenu.basicBattleAction, curr, chosenPlayer, curr.weaponsList[0]);
+            bam.IsPerformActionSuccessful(basicBattleMenu.basicBattleAction, curr, chosenPlayer, curr.weaponsList[0]);
         }
 
         Invoke(nameof(EndCurrentAction), 1f);

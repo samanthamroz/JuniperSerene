@@ -5,5 +5,4 @@ using UnityEngine;
 public class DoubleLinkedList : MonoBehaviour
 {
     public GameObject prev, next;
-    public bool isHead;
 }
