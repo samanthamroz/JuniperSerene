@@ -17,8 +17,8 @@ public class BattleActionsManager : MonoBehaviour
     }
 
     public bool IsPerformActionSuccessful(BattleAction action, Character attacker) {
-        if (action.needsTarget || action.needsWeapon) {
-            throw new System.Exception("Needs target and/or weapon");
+        if (action.targetNeeded != TargetType.NONE || action.weaponTypeNeeded != WeaponType.NONE) {
+            throw new System.ArgumentException("Bad parameters for given action");
         }
         switch (action.displayName) {
             case "Attacks":
@@ -39,31 +39,62 @@ public class BattleActionsManager : MonoBehaviour
                 Surrender();
                 return true;
             default:
-                throw new System.Exception("Action name is undefined");
+                throw new System.ArgumentException("Action name is undefined");
         }
     }
 
     public bool IsPerformActionSuccessful(BattleAction action, Character attacker, Character target) {
-        if (!action.needsTarget || action.needsWeapon) {
-            throw new System.Exception("Doesn't need target and/or needs weapon");
+        if (action.targetNeeded == TargetType.NONE || action.weaponTypeNeeded != WeaponType.NONE) {
+            throw new System.ArgumentException("Bad parameters for given action");
         }
 
         switch (action.displayName) {
+            default:
+                throw new System.ArgumentException("Action name is undefined");
+        }
+    }
+
+    public bool IsPerformActionSuccessful(BattleAction action, Character attacker, Party targetAll, Weapon weapon) {
+        /*
+        if (action.targetNeeded == TargetType.PARTY || weapon.weaponType != action.weaponTypeNeeded) {
+            throw new System.ArgumentException("Bad parameters for given action");
+        } */
+        switch (action.displayName) {
+            case "Wild Slash":
+                foreach (Character target in targetAll.partyCharacters) {
+                    StartCoroutine(BasicAttack(attacker, target, weapon));
+                }
+                return true;
+            case "Quick Slash":
+                foreach (Character target in targetAll.partyCharacters) {
+                    StartCoroutine(BasicAttack(attacker, target, weapon));
+                }
+                return true;
+            case "Multi-Stab":
+                foreach (Character target in targetAll.partyCharacters) {
+                    StartCoroutine(BasicAttack(attacker, target, weapon));
+                }
+                return true;
+            case "Clobber":
+                foreach (Character target in targetAll.partyCharacters) {
+                    StartCoroutine(BasicAttack(attacker, target, weapon));
+                }
+                return true;
             default:
                 throw new System.Exception("Action name is undefined");
         }
     }
 
     public bool IsPerformActionSuccessful(BattleAction action, Character attacker, Character target, Weapon weapon) {
-        if (!action.needsTarget || !action.needsWeapon) {
-            throw new System.Exception("Doesn't need target and/or weapon");
+        if (action.targetNeeded == TargetType.NONE || (action.weaponTypeNeeded != WeaponType.ANY && action.weaponTypeNeeded != weapon.weaponType)) {
+            throw new System.ArgumentException("Bad parameters for given ");
         }
         switch (action.displayName) {
             case "":
                 StartCoroutine(BasicAttack(attacker, target, weapon));
                 return true;
             default:
-                throw new System.Exception("Action name is undefined");
+                throw new System.ArgumentException("Action name is undefined");
         }
     }
 

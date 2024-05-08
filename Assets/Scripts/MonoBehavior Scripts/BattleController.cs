@@ -8,26 +8,25 @@ using UnityEngine.UI;
 public class BattleController : MonoBehaviour
 {
     private BattleManager bm;
+    private BattleUIManager bui;
     
     //Action Menu Variables
-    [SerializeField] private GameObject actionMenuButtonsContainer, selectedAction;
-    public Color selectionColor, selectedColor;
+    [SerializeField] private GameObject actionMenuButtonsContainer;
+
+    //Controller Variables
     private bool isInActionMenu;
     private bool isControllerActive;
 
-    //Target Menu Variables
-    private Character selectedTarget;
-    private GameObject selectedTargetArrow {
-        get {
-            if (selectedTarget != null) {
-                return selectedTarget.gameObject.transform.GetChild(0).gameObject;
-            }
-            return null;
-        }
-    }
+    //Selected Action Variables
+    private ActionMenuButton selectedActionButton;
+    private BattleAction currAction { get { return selectedActionButton.associatedAction; } }
+    private List<Character> selectedActionTargets;
+    private Character selectedActionMainTarget;
 
-    public void StartController() {
+    void Awake()
+    {
         bm = gameObject.GetComponent<BattleManager>();
+        bui = gameObject.GetComponent<BattleUIManager>();
     }
     public void StopController() {
         isControllerActive = false;
@@ -39,24 +38,27 @@ public class BattleController : MonoBehaviour
     }
     private IEnumerator ChooseNewSelectedAction() {
         yield return null;
+        //Reset
+        selectedActionTargets = null;
+        selectedActionMainTarget = null;
+        selectedActionButton = null;
         
+        //search for top button in menu
         if (actionMenuButtonsContainer.transform.GetChild(0).childCount > 0) {
-            selectedAction = actionMenuButtonsContainer.transform.GetChild(0).GetChild(0).gameObject;
+            selectedActionButton = actionMenuButtonsContainer.transform.GetChild(0).GetChild(0).gameObject.GetComponent<ActionMenuButton>();
         } else {
-            ActionMenuButton validButtonFound = null;
             for (int i = 0; i < actionMenuButtonsContainer.transform.childCount; i++) {
-                if (validButtonFound == null) {
-                    actionMenuButtonsContainer.transform.GetChild(i).gameObject.TryGetComponent<ActionMenuButton>(out validButtonFound);
+                if (selectedActionButton == null) {
+                    actionMenuButtonsContainer.transform.GetChild(i).gameObject.TryGetComponent<ActionMenuButton>(out selectedActionButton);
                 }
             }
-
-            if (validButtonFound == null) {
+            if (selectedActionButton == null) {
                 throw new System.Exception("No valid starting button found");
             }
-            selectedAction = validButtonFound.gameObject;
         }
-        selectedAction.GetComponent<Image>().color = selectionColor;
-        gameObject.GetComponent<BattleUIManager>().UpdateTab(selectedAction);
+
+        bui.SetButtonColor(selectedActionButton.gameObject, ButtonState.HIGHLIGHTED);
+        bui.UpdateTab(selectedActionButton.gameObject);
     }
     
     private void OnNavigate(InputValue value) {
@@ -68,89 +70,90 @@ public class BattleController : MonoBehaviour
 
         if (isInActionMenu) {
             ActionMenuControls(input);
-            gameObject.GetComponent<BattleUIManager>().UpdateTab(selectedAction);
+            gameObject.GetComponent<BattleUIManager>().UpdateTab(selectedActionButton.gameObject);
         } else {
             TargetMenuControls(input);
         }
     }
     private void ActionMenuControls(Vector2 input) {
-        selectedAction.GetComponent<Image>().color = new Color(1,1,1);
+        bui.SetButtonColor(selectedActionButton.gameObject, ButtonState.CLEAR);
 
         if (input.x == 0) {
             if (input.y == 1) { //up
-                selectedAction = selectedAction.GetComponent<ActionMenuButton>().prev;
+                selectedActionButton = selectedActionButton.prev.GetComponent<ActionMenuButton>();
             } else if (input.y == -1) { //down
-                selectedAction = selectedAction.GetComponent<ActionMenuButton>().next;
+                selectedActionButton = selectedActionButton.next.GetComponent<ActionMenuButton>();
             }
         } else {
             if (input.x == 1) {
-                if (selectedAction.GetComponent<ActionMenuButton>().right != null) {
-                    selectedAction = selectedAction.GetComponent<ActionMenuButton>().right;
+                if (selectedActionButton.right != null) {
+                    selectedActionButton = selectedActionButton.right.GetComponent<ActionMenuButton>();
                 }
             } else if (input.x == -1) {
-                if (selectedAction.GetComponent<ActionMenuButton>().left != null) {
-                    selectedAction = selectedAction.GetComponent<ActionMenuButton>().left;
+                if (selectedActionButton.left != null) {
+                    selectedActionButton = selectedActionButton.left.GetComponent<ActionMenuButton>();
                 }
             }
         }
 
-        selectedAction.GetComponent<Image>().color = selectionColor;
+        bui.SetButtonColor(selectedActionButton.gameObject, ButtonState.HIGHLIGHTED);
     }
     private void TargetMenuControls(Vector2 input) {
-        selectedTargetArrow.SetActive(false);
+        StartCoroutine(bui.RemoveAllSelectionPointers());
 
         if (input.x == 0) {
             if (input.y == 1) { //up
-                selectedTarget = selectedTarget.prev;
+                selectedActionMainTarget = selectedActionMainTarget.prev;
             } else if (input.y == -1) { //down
-                selectedTarget = selectedTarget.next;
+                selectedActionMainTarget = selectedActionMainTarget.next;
             }
         } else {
             if (input.x == 1) { //right
-                selectedTarget = selectedTarget.prev;
+                selectedActionMainTarget = selectedActionMainTarget.prev;
             } else if (input.x == -1) { //left
-                selectedTarget = selectedTarget.next;
+                selectedActionMainTarget = selectedActionMainTarget.next;
             }
         }
 
-        selectedTargetArrow.SetActive(true);
+        foreach (Character target in selectedActionTargets) {
+            if (target != selectedActionMainTarget) {
+                bui.DrawSelectionPointer(target.gameObject.transform.position, false);
+            }
+        }
+        bui.DrawSelectionPointer(selectedActionMainTarget.gameObject.transform.position, true);
     }
 
     private void OnSubmit() {
-        BattleAction currAction = selectedAction.GetComponent<ActionMenuButton>().associatedAction;
-
         if (!isControllerActive) {
             return;
         }
 
         if (isInActionMenu) {
             //get eligible targets for action code
-            List<Character> targets = bm.GetActionTargets(currAction);
 
-            //do actionCode if it does not require a target, else go to target selection mode
-            if (!currAction.needsTarget && targets.Count == 0) {
-                bm.DoAction(currAction); 
-            } else if (currAction.needsTarget && targets.Count > 0 ) {
-                selectedAction.GetComponent<Image>().color = selectedColor;
-                selectedTarget = targets[0];
-                selectedTargetArrow.SetActive(true);
-                
-                isInActionMenu = false;
+            if (currAction.targetNeeded == TargetType.NONE) {
+                bm.DoAction(currAction);
             } else {
-                throw new Exception("Something funky when OnSubmit()");
+                selectedActionTargets = bm.GetEligibleTargets(currAction.targetNeeded);
+                selectedActionMainTarget = selectedActionTargets[0];
+                
+                foreach (Character target in selectedActionTargets) {
+                    if (target != selectedActionMainTarget) {
+                        bui.DrawSelectionPointer(target.gameObject.transform.position, false);
+                    }
+                }
+                bui.DrawSelectionPointer(selectedActionMainTarget.gameObject.transform.position, true);
+
+                isInActionMenu = false;
             }
         } else {
-            if (selectedAction.GetComponent<ActionMenuButton>().associatedWeapon != null) {
-                bm.DoAction(currAction, selectedTarget, selectedAction.GetComponent<ActionMenuButton>().associatedWeapon);
+            if (selectedActionButton.associatedWeapon != null) {
+                bm.DoAction(currAction, selectedActionMainTarget, selectedActionButton.associatedWeapon);
             } else {
-                bm.DoAction(currAction, selectedTarget);
+                bm.DoAction(currAction, selectedActionMainTarget);
             }
 
-            //go back to action menu mode
-            selectedAction.GetComponent<Image>().color = selectionColor;
-            selectedTargetArrow.SetActive(false);
-            selectedTarget = null;
-
+            StartCoroutine(bui.RemoveAllSelectionPointers());
             isInActionMenu = true;
         }
     }
@@ -159,13 +162,6 @@ public class BattleController : MonoBehaviour
         if (!isControllerActive) {
             return;
         }
-
-        if (!isInActionMenu) {
-            //go back to action menu mode
-            selectedTargetArrow.SetActive(false);
-            selectedAction.GetComponent<Image>().color = selectionColor;
-            isInActionMenu = true;
-        }
     }
 
     private void OnTab() {
@@ -173,6 +169,6 @@ public class BattleController : MonoBehaviour
             return;
         }
 
-        gameObject.GetComponent<BattleUIManager>().ToggleTab(selectedAction);
+        gameObject.GetComponent<BattleUIManager>().ToggleTab(selectedActionButton.gameObject);
     }
 }

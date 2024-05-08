@@ -5,9 +5,20 @@ using UnityEditor;
 public class BattleAction : ScriptableObject
 {
     public string displayName, description;
-    public bool needsTarget, needsCharacterData, needsWeapon;
+    public bool needsCharacterData;
+    public WeaponType weaponTypeNeeded;
+    public TargetType targetNeeded;
 }
 
+
+
+public enum TargetType {
+    NONE, //no target needed
+    SINGLE, //hits a single target
+    MULTI, //hits a list of characters
+    PARTY, //hits all characters of one party
+    ALL //hits all characters in the battle
+}
 
 
 [CustomEditor(typeof(BattleAction))]

@@ -3,16 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System;
-using Unity.VisualScripting;
-using System.Data.Common;
-using TMPro.Examples;
-using UnityEditor;
+
+public enum ButtonState {
+    CLEAR,
+    HIGHLIGHTED,
+    PRESSED,
+    LOCKED
+}
+
 public class BattleUIManager : MonoBehaviour
 {
-    [SerializeField] private GameObject currentTurnContainer, nextTurnContainer, healthBarsContainer, actionMenuButtonsContainer, tabInformationContainer;
-    [SerializeField] private GameObject characterImagePrefab, healthBarPrefab, damageTextPrefab, textActionMenuButtonPrefab, imageActionMenuButtonPrefab;
+    [SerializeField] private GameObject overlayCanvas, currentTurnContainer, nextTurnContainer, healthBarsContainer, actionMenuButtonsContainer, tabInformationContainer;
+    [SerializeField] private GameObject characterImagePrefab, healthBarPrefab, damageTextPrefab, selectionPointerPrefab, textActionMenuButtonPrefab, imageActionMenuButtonPrefab;
+    private List<GameObject> pointerObjects = new List<GameObject>();
     [SerializeField] private TextMeshProUGUI actionText;
+    [SerializeField] private Color buttonClearColor, buttonHighlightColor, buttonPressedColor, buttonLockedColor;
     private List<GameObject> currentTurnUI, nextTurnUI;
 
     public void CreateNewTurnUI(List<Character> currentTurn, List<Character> nextTurn) {
@@ -180,10 +185,9 @@ public class BattleUIManager : MonoBehaviour
             buttonObjects.Add(Instantiate(textActionMenuButtonPrefab, actionMenuButtonsContainer.transform));
             buttonObjects[^1].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = action.displayName;
             buttonObjects[^1].GetComponent<ActionMenuButton>().associatedAction = action;
-            if (action is BattleWeaponAction) {
-                BattleWeaponAction battleWeaponAction = action as BattleWeaponAction;
+            if (action.weaponTypeNeeded != WeaponType.NONE) {
                 foreach (Weapon weapon in character.weaponsList) {
-                    if (weapon.weaponType == battleWeaponAction.weaponTypeNeeded) {
+                    if (weapon.weaponType == action.weaponTypeNeeded) {
                         buttonObjects[^1].GetComponent<ActionMenuButton>().associatedWeapon = weapon;
                     }
                 }
@@ -215,12 +219,60 @@ public class BattleUIManager : MonoBehaviour
             associatedDescription = associatedDescription.Replace("/character/", character.name);
             associatedDescription = associatedDescription.Replace("/role/", character.role);
         }
-        if (associatedAction.needsWeapon) {
+        if (associatedAction.weaponTypeNeeded != WeaponType.NONE && associatedAction.weaponTypeNeeded != WeaponType.ANY) {
             associatedDescription = associatedDescription.Replace("/weapon/", button.GetComponent<ActionMenuButton>().associatedWeapon.name);
         }
         button.GetComponent<ActionMenuButton>().associatedDescription = associatedDescription;
     }
 
+    public void SetButtonColor(GameObject buttonObject, ButtonState buttonState) {
+        if (buttonState == ButtonState.CLEAR) {
+            buttonObject.GetComponent<Image>().color = buttonClearColor;
+        } else if (buttonState == ButtonState.HIGHLIGHTED) {
+            buttonObject.GetComponent<Image>().color = buttonHighlightColor;
+        } else if (buttonState == ButtonState.PRESSED) {
+            buttonObject.GetComponent<Image>().color = buttonPressedColor;
+        } else if (buttonState == ButtonState.LOCKED) {
+            buttonObject.GetComponent<Image>().color = buttonLockedColor;
+        }
+    }
+    
+    public void DrawSelectionPointer(Vector3 screenCoords, bool isMainTarget) {
+        int verticalOffset = 2;
+        if (isMainTarget) {
+            verticalOffset = 4;
+        }
+
+        GameObject pointerObj = Instantiate(selectionPointerPrefab, overlayCanvas.transform);
+
+        Vector2 screenPoint = Camera.main.WorldToScreenPoint(new Vector3(screenCoords.x, screenCoords.y + verticalOffset, screenCoords.z));
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            overlayCanvas.GetComponent<RectTransform>(), 
+            screenPoint, 
+            null, 
+            out Vector2 canvasPos
+        );
+        pointerObj.transform.localPosition = canvasPos;
+
+        if (isMainTarget) {
+            pointerObjects.Insert(0, pointerObj);
+        } else {
+            pointerObjects.Add(pointerObj);  
+        }
+        
+    }
+    public IEnumerator RemoveAllSelectionPointers() {
+        foreach (GameObject pointer in pointerObjects) {
+            Destroy(pointer);
+        }
+        pointerObjects.Clear();
+        yield return null;
+    }
+    public IEnumerator RemoveMainSelectionPointer() {
+        Destroy(pointerObjects[0]);
+        pointerObjects.RemoveAt(0);
+        yield return null;
+    }
 
     public void ChangeActionText(string newText) {
         actionText.text = "[" + newText + "]";
@@ -232,7 +284,7 @@ public class BattleUIManager : MonoBehaviour
     public void DrawDamageText(int[] damage, Vector3 screenCoords) {
         GameObject[] textObjs = new GameObject[damage.Length];
         for (int i = 0; i < damage.Length; i++) {
-            textObjs[i] = Instantiate(damageTextPrefab, actionMenuButtonsContainer.transform.parent.parent);
+            textObjs[i] = Instantiate(damageTextPrefab, overlayCanvas.transform);
         }
         StartCoroutine(DrawDamageText(textObjs, damage, screenCoords));
     }
@@ -240,7 +292,7 @@ public class BattleUIManager : MonoBehaviour
         for (int i = 0; i < damage.Length; i++) {
             Vector2 screenPoint = Camera.main.WorldToScreenPoint(new Vector3(screenCoords.x + .5f, screenCoords.y + 1, screenCoords.z));
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                actionMenuButtonsContainer.transform.parent.parent.GetComponent<RectTransform>(), 
+                overlayCanvas.GetComponent<RectTransform>(), 
                 screenPoint, 
                 null, 
                 out Vector2 canvasPos
@@ -261,8 +313,9 @@ public class BattleUIManager : MonoBehaviour
             yield return new WaitForSeconds(.2f);
         }
     }
-    private void RemoveDamageText(GameObject damageText, float delayInSeconds) {
+    private IEnumerator RemoveDamageText(GameObject damageText, float delayInSeconds) {
         Destroy(damageText, delayInSeconds);
+        yield return null;
     }
 
     public void ToggleTab(GameObject selectedAction)

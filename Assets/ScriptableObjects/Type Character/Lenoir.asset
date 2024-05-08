@@ -19,7 +19,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 19ff5ea11dea9c74bbdaeab85cd46fa5, type: 2}
   - {fileID: 11400000, guid: 144a559e1bb7c1e4ea4777f142ad1366, type: 2}
   attacksList:
-  - {fileID: 11400000, guid: df258c639f31871418050860946441bb, type: 2}
+  - {fileID: 11400000, guid: f70ddb4098f230346a95d1ab0b49acfc, type: 2}
   abilitiesList:
   - {fileID: 11400000, guid: cbf6e28afa6266e4b8be0f589c6b0817, type: 2}
   isInFront: 1

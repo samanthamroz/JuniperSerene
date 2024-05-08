@@ -147,7 +147,6 @@ public class BattleManager : MonoBehaviour
         bui = gameObject.GetComponent<BattleUIManager>();
         ba = gameObject.GetComponent<BattleAnimations>();
         bc = gameObject.GetComponent<BattleController>();
-        bc.StartController();
 
         //initialize 1st turn order
         CreateNextTurnOrder();
@@ -300,10 +299,12 @@ public class BattleManager : MonoBehaviour
         List<GameObject> getEligibleTargets(int actionCode): returns the current list of eligible targets for the given action code
         HandleTargettedAction(int actionCode, CCB target): executes targetted actions
     */
-    public List<Character> GetActionTargets(BattleAction action) {
-        List<Character> targets = new List<Character>();
+    public List<Character> GetEligibleTargets(TargetType targetType) {
+        List<Character> targets = null;
 
-        if (action.needsTarget) {
+        //Single/Multi get all characters from "next line up"
+        if (targetType == TargetType.SINGLE || targetType == TargetType.MULTI) {
+            targets = new List<Character>();
             if (playersInFront.Contains(curr) || enemiesInBack.Contains(curr)) {
                 foreach (Character enemy in enemiesInFront) {
                     targets.Add(enemy);
@@ -313,16 +314,25 @@ public class BattleManager : MonoBehaviour
                     targets.Add(player);
                 }
             }
+        //Party gets all characters from the opposite party
+        } else if (targetType == TargetType.PARTY) {
+            if (curr.isPlayable) {
+                targets = enemyParty.partyCharacters;
+            } else {
+                targets = playerParty.partyCharacters;
+            }
+        //All gets all characters in battle
+        } else if (targetType == TargetType.ALL) {
+            targets = allCharacters;
         }
 
+        if (targets == null) {
+            throw new Exception("No targets found");
+        }
         return targets;
     }
     public void DoAction(BattleAction action) {
         bui.DisableActionMenu();
-
-        if (action.needsTarget) {
-            throw new Exception("Action code needs target");
-        }
 
         if (bam.IsPerformActionSuccessful(action, curr)) {
             Invoke(nameof(EndCurrentAction), 1f);
@@ -344,7 +354,15 @@ public class BattleManager : MonoBehaviour
     public void DoAction(BattleAction action, Character target, Weapon weapon) {
         bui.DisableActionMenu();
 
-        if (bam.IsPerformActionSuccessful(action, curr, target, weapon)) {
+        bool isSuccessful = false;
+
+        if (action.targetNeeded == TargetType.PARTY) {
+            isSuccessful = bam.IsPerformActionSuccessful(action, curr, enemyParty, weapon);
+        } else {
+            isSuccessful = bam.IsPerformActionSuccessful(action, curr, target, weapon);
+        }
+
+        if (isSuccessful) {
             Invoke(nameof(EndCurrentAction), 1f);
             return;
         }

@@ -7,7 +7,6 @@ using UnityEditor;
 public class BattleInitializer : MonoBehaviour
 {
     public GameObject characterPrefab;
-    public List<BattleAction> actionsList;
     private BattleManager bm;
     private BattleUIManager bui;
     void Start()

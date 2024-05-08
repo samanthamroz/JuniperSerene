@@ -6,15 +6,6 @@ public class Weapon : ScriptableObject
     public new string name;
     public int damage;
     public WeaponType weaponType;
-    public enum WeaponType
-    {
-        SWORD,
-        DAGGER,
-        STAFF,
-        POLEARM,
-        BOW,
-        SLING
-    }
 
     public bool hasAugment;
     public Sprite sprite;
@@ -28,3 +19,15 @@ public class Weapon : ScriptableObject
         return damageList;
     }
 }
+
+public enum WeaponType
+    {
+        NONE,
+        ANY,
+        SWORD,
+        DAGGER,
+        STAFF,
+        POLEARM,
+        BOW,
+        SLING
+    }
