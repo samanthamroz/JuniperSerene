@@ -154,9 +154,9 @@ public class BattleUIManager : MonoBehaviour
         }
 
         //Make the left-right double-linked list
-        if (buttonObjects.Count > 0) {
+        if (character.weaponsList.Count > 0) {
             buttonObjects[0].GetComponent<ActionMenuButton>().left = buttonObjects[0];
-            if (buttonObjects.Count == 2) {
+            if (character.weaponsList.Count == 2) {
                 buttonObjects[0].GetComponent<ActionMenuButton>().right = buttonObjects[1];
                 buttonObjects[1].GetComponent<ActionMenuButton>().left = buttonObjects[0];
             } else {
@@ -204,11 +204,16 @@ public class BattleUIManager : MonoBehaviour
     }
     private void DoubleLinkedListHelper(List<GameObject> buttonObjects) {
         buttonObjects[0].GetComponent<ActionMenuButton>().prev = buttonObjects[0];
-        for (int i = 1; i < buttonObjects.Count - 1; i++) {
-            buttonObjects[i - 1].GetComponent<ActionMenuButton>().next = buttonObjects[i];
-            buttonObjects[i].GetComponent<ActionMenuButton>().prev = buttonObjects[i - 1];
-            buttonObjects[i].GetComponent<ActionMenuButton>().next = buttonObjects[i + 1];
-            buttonObjects[i + 1].GetComponent<ActionMenuButton>().prev = buttonObjects[i];
+        if (buttonObjects.Count == 2) {
+            buttonObjects[0].GetComponent<ActionMenuButton>().next = buttonObjects[1];
+            buttonObjects[1].GetComponent<ActionMenuButton>().prev = buttonObjects[0];
+        } else {
+            for (int i = 1; i < buttonObjects.Count - 1; i++) {
+                buttonObjects[i - 1].GetComponent<ActionMenuButton>().next = buttonObjects[i];
+                buttonObjects[i].GetComponent<ActionMenuButton>().prev = buttonObjects[i - 1];
+                buttonObjects[i].GetComponent<ActionMenuButton>().next = buttonObjects[i + 1];
+                buttonObjects[i + 1].GetComponent<ActionMenuButton>().prev = buttonObjects[i];
+            }
         }
         buttonObjects[^1].GetComponent<ActionMenuButton>().next = buttonObjects[^1];
     }
@@ -219,7 +224,7 @@ public class BattleUIManager : MonoBehaviour
             associatedDescription = associatedDescription.Replace("/character/", character.name);
             associatedDescription = associatedDescription.Replace("/role/", character.role);
         }
-        if (associatedAction.weaponTypeNeeded != WeaponType.NONE && associatedAction.weaponTypeNeeded != WeaponType.ANY) {
+        if (associatedAction.weaponTypeNeeded != WeaponType.NONE) {
             associatedDescription = associatedDescription.Replace("/weapon/", button.GetComponent<ActionMenuButton>().associatedWeapon.name);
         }
         button.GetComponent<ActionMenuButton>().associatedDescription = associatedDescription;
@@ -238,9 +243,9 @@ public class BattleUIManager : MonoBehaviour
     }
     
     public void DrawSelectionPointer(Vector3 screenCoords, bool isMainTarget) {
-        int verticalOffset = 2;
+        float verticalOffset = 1.8f;
         if (isMainTarget) {
-            verticalOffset = 4;
+            verticalOffset = 2;
         }
 
         GameObject pointerObj = Instantiate(selectionPointerPrefab, overlayCanvas.transform);
@@ -257,6 +262,8 @@ public class BattleUIManager : MonoBehaviour
         if (isMainTarget) {
             pointerObjects.Insert(0, pointerObj);
         } else {
+            pointerObj.transform.localScale = new Vector3(0.4f,0.4f,0.4f);
+            pointerObj.GetComponent<Image>().color = new Color(0, 0.3826261f, 1, 0.8f);
             pointerObjects.Add(pointerObj);  
         }
         
@@ -306,8 +313,7 @@ public class BattleUIManager : MonoBehaviour
                 );
             }
             textObjs[i].GetComponent<TextMeshProUGUI>().text = damage[i].ToString();
-
-            RemoveDamageText(textObjs[i], gameObject.GetComponent<BattleAnimations>().DamageText(textObjs[i])); 
+            StartCoroutine(RemoveDamageText(textObjs[i], gameObject.GetComponent<BattleAnimations>().DamageText(textObjs[i])));
 
             // Pause for 1 second before processing the next damage
             yield return new WaitForSeconds(.2f);

@@ -9,12 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b35c1562720288447859dfaa21e721c8, type: 3}
+  m_Script: {fileID: 11500000, guid: c5dd44f325e294f438b5fcc70d563ffb, type: 3}
   m_Name: _debug_StaffAttackExample
   m_EditorClassIdentifier: 
   displayName: Clobber
   description: Attack all enemies with /weapon/
-  needsTarget: 0
   needsCharacterData: 0
-  needsWeapon: 1
-  weaponTypeNeeded: 2
+  weaponTypeNeeded: 4
+  targetNeeded: 3

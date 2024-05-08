@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Sword of the Sun
   damage: 99
-  weaponType: 0
+  weaponType: 2
   hasAugment: 0
   sprite: {fileID: 21300000, guid: 7726bd1e2cc6884418c009de5a133c4f, type: 3}

@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Moss Sling
   damage: 25
-  weaponType: 5
+  weaponType: 7
   hasAugment: 0
   sprite: {fileID: 21300000, guid: d950ebe34974e0040b627ce0af7f2e82, type: 3}

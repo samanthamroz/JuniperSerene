@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Rusty Polearm
   damage: 62
-  weaponType: 3
+  weaponType: 5
   hasAugment: 0
   sprite: {fileID: 21300000, guid: 21141942a535bb248aec42104555437f, type: 3}

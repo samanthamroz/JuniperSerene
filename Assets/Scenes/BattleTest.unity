@@ -2077,9 +2077,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionMenuButtonsContainer: {fileID: 635626306}
-  selectedAction: {fileID: 0}
-  selectionColor: {r: 1, g: 0.7688679, b: 0.9288825, a: 1}
-  selectedColor: {r: 0.6886792, g: 0.5489943, b: 0.6454434, a: 1}
 --- !u!114 &1994643985
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2143,15 +2140,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterPrefab: {fileID: 2967074875404645516, guid: 4302b41cee705b14c88fee8808ff90c0, type: 3}
-  actionsList:
-  - {fileID: 11400000, guid: cbf6e28afa6266e4b8be0f589c6b0817, type: 2}
-  - {fileID: 11400000, guid: 1033e470b121c684cb3d8948d0d93177, type: 2}
-  - {fileID: 11400000, guid: fede136b098cb094c9ed20de94fd0dc7, type: 2}
-  - {fileID: 11400000, guid: e0439640f1445d449b5b01c8a9b64545, type: 2}
-  - {fileID: 11400000, guid: 96d53ebccd9649f44b7754ad004c7263, type: 2}
-  - {fileID: 11400000, guid: 8a9e9b391a423ca41bb708283c0063c5, type: 2}
-  - {fileID: 11400000, guid: 76a478a1e10b16a4898ee42e813863ec, type: 2}
-  - {fileID: 11400000, guid: d6f0222bdf85ab946bc2b4f9d136fc4d, type: 2}
 --- !u!114 &1994643988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2164,6 +2152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 191d57e1aab161147b7e72d126ce0499, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overlayCanvas: {fileID: 154147819}
   currentTurnContainer: {fileID: 1072175051}
   nextTurnContainer: {fileID: 205765092}
   healthBarsContainer: {fileID: 164564908}
@@ -2172,9 +2161,14 @@ MonoBehaviour:
   characterImagePrefab: {fileID: 5472003476447679981, guid: 52b91860866e1b04f8619ab7af2ae969, type: 3}
   healthBarPrefab: {fileID: 2175689105868939636, guid: 0282531f32710394399e71e72a9641e8, type: 3}
   damageTextPrefab: {fileID: 2766730991961970700, guid: a420e7cbdcd97e242a9b29875713fa5a, type: 3}
+  selectionPointerPrefab: {fileID: 1153025553814509332, guid: 977a4c249e6c08a449fd095aaa693130, type: 3}
   textActionMenuButtonPrefab: {fileID: 3629706048107465103, guid: 1e3bed44837f603498dc34dda75ce1a0, type: 3}
   imageActionMenuButtonPrefab: {fileID: 8236760402331492674, guid: ede435670bba9f146b7af18765e313c5, type: 3}
   actionText: {fileID: 480498696}
+  buttonClearColor: {r: 1, g: 1, b: 1, a: 1}
+  buttonHighlightColor: {r: 0.9245283, g: 0.61489856, b: 0.86332244, a: 1}
+  buttonPressedColor: {r: 0.6226415, g: 0.41998932, b: 0.5854886, a: 1}
+  buttonLockedColor: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 1}
 --- !u!114 &1994643989
 MonoBehaviour:
   m_ObjectHideFlags: 0

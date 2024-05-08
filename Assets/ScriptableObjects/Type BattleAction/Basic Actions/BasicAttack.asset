@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5dd44f325e294f438b5fcc70d563ffb, type: 3}
   m_Name: BasicAttack
   m_EditorClassIdentifier: 
-  displayText: 
+  displayName: 
   description: Move to front and attack with /weapon/
-  needsTarget: 1
-  needsCharacterName: 0
-  needsWeapon: 1
+  needsCharacterData: 0
+  weaponTypeNeeded: 1
+  targetNeeded: 1

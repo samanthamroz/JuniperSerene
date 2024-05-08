@@ -117,7 +117,8 @@ public class BattleController : MonoBehaviour
 
         foreach (Character target in selectedActionTargets) {
             if (target != selectedActionMainTarget) {
-                bui.DrawSelectionPointer(target.gameObject.transform.position, false);
+                bui.DrawSelectionPointer(target.gameObject.transform.position, 
+                    currAction.targetNeeded == TargetType.ALL || currAction.targetNeeded == TargetType.PARTY || currAction.targetNeeded == TargetType.MULTI);
             }
         }
         bui.DrawSelectionPointer(selectedActionMainTarget.gameObject.transform.position, true);
@@ -136,10 +137,11 @@ public class BattleController : MonoBehaviour
             } else {
                 selectedActionTargets = bm.GetEligibleTargets(currAction.targetNeeded);
                 selectedActionMainTarget = selectedActionTargets[0];
-                
+
                 foreach (Character target in selectedActionTargets) {
                     if (target != selectedActionMainTarget) {
-                        bui.DrawSelectionPointer(target.gameObject.transform.position, false);
+                        bui.DrawSelectionPointer(target.gameObject.transform.position, 
+                            currAction.targetNeeded == TargetType.ALL || currAction.targetNeeded == TargetType.PARTY || currAction.targetNeeded == TargetType.MULTI);
                     }
                 }
                 bui.DrawSelectionPointer(selectedActionMainTarget.gameObject.transform.position, true);

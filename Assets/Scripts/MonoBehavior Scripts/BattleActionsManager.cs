@@ -20,19 +20,20 @@ public class BattleActionsManager : MonoBehaviour
         if (action.targetNeeded != TargetType.NONE || action.weaponTypeNeeded != WeaponType.NONE) {
             throw new System.ArgumentException("Bad parameters for given action");
         }
+        bui.ChangeActionText(action.displayName);
         switch (action.displayName) {
             case "Attacks":
+                bui.RemoveActionText();
                 bui.DrawNewActionMenu(attacker.attacksList, attacker, false);
                 return false;
             case "Abilities":
+                bui.RemoveActionText();
                 bui.DrawNewActionMenu(attacker.abilitiesList, attacker, false);
                 return false;
             case "Retreat":
-                bui.ChangeActionText("Retreat");
                 bm.Move();
                 return true;
             case "Advance":
-                bui.ChangeActionText("Advance");
                 bm.Move();
                 return true;
             case "Surrender":
@@ -47,7 +48,7 @@ public class BattleActionsManager : MonoBehaviour
         if (action.targetNeeded == TargetType.NONE || action.weaponTypeNeeded != WeaponType.NONE) {
             throw new System.ArgumentException("Bad parameters for given action");
         }
-
+        bui.ChangeActionText(action.displayName);
         switch (action.displayName) {
             default:
                 throw new System.ArgumentException("Action name is undefined");
@@ -59,6 +60,7 @@ public class BattleActionsManager : MonoBehaviour
         if (action.targetNeeded == TargetType.PARTY || weapon.weaponType != action.weaponTypeNeeded) {
             throw new System.ArgumentException("Bad parameters for given action");
         } */
+        bui.ChangeActionText(action.displayName);
         switch (action.displayName) {
             case "Wild Slash":
                 foreach (Character target in targetAll.partyCharacters) {
@@ -89,8 +91,10 @@ public class BattleActionsManager : MonoBehaviour
         if (action.targetNeeded == TargetType.NONE || (action.weaponTypeNeeded != WeaponType.ANY && action.weaponTypeNeeded != weapon.weaponType)) {
             throw new System.ArgumentException("Bad parameters for given ");
         }
+        bui.ChangeActionText(action.displayName);
         switch (action.displayName) {
             case "":
+                bui.ChangeActionText("Basic");
                 StartCoroutine(BasicAttack(attacker, target, weapon));
                 return true;
             default:
@@ -118,7 +122,6 @@ public class BattleActionsManager : MonoBehaviour
         }
 
         //visual feedback
-        bui.ChangeActionText("Basic");
         bui.DrawDamageText(totalDamageDone, target.gameObject.transform.position);
         bui.UpdateHealthBar(target);
 

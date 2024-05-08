@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Shell Dagger
   damage: 69
-  weaponType: 1
+  weaponType: 3
   hasAugment: 0
   sprite: {fileID: 21300000, guid: c12b29cba15c1b64ebf00469985a9fe0, type: 3}
