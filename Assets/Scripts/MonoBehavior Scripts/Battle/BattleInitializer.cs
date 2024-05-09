@@ -15,7 +15,7 @@ public class BattleInitializer : MonoBehaviour
         //initialize all players/enemies
         foreach (Character player in bm.playerParty.charactersStartingInFront) {
             player.BattleReset(true);
-            CharacterCombatBehavior playerObj = Instantiate(characterPrefab).GetComponent<CharacterCombatBehavior>();
+            CharacterBattleBehavior playerObj = Instantiate(characterPrefab).GetComponent<CharacterBattleBehavior>();
             playerObj.gameObject.name = player.name;
             playerObj.gameObject.GetComponent<SpriteRenderer>().sprite = player.sprite;
             playerObj.character = player;
@@ -25,7 +25,7 @@ public class BattleInitializer : MonoBehaviour
 
         foreach (Character player in bm.playerParty.charactersStartingInBack) {
             player.BattleReset(true);
-            CharacterCombatBehavior playerObj = Instantiate(characterPrefab).GetComponent<CharacterCombatBehavior>();
+            CharacterBattleBehavior playerObj = Instantiate(characterPrefab).GetComponent<CharacterBattleBehavior>();
             playerObj.gameObject.name = player.name;
             playerObj.gameObject.GetComponent<SpriteRenderer>().sprite = player.sprite;
             playerObj.character = player;
@@ -35,7 +35,7 @@ public class BattleInitializer : MonoBehaviour
 
         foreach (Character enemy in bm.enemyParty.charactersStartingInFront) {
             enemy.BattleReset(true);
-            CharacterCombatBehavior enemyObj = Instantiate(characterPrefab).GetComponent<CharacterCombatBehavior>();
+            CharacterBattleBehavior enemyObj = Instantiate(characterPrefab).GetComponent<CharacterBattleBehavior>();
             enemyObj.gameObject.name = enemy.name;
             enemyObj.gameObject.GetComponent<SpriteRenderer>().sprite = enemy.sprite;
             enemyObj.gameObject.GetComponent<SpriteRenderer>().flipX = true;
@@ -46,7 +46,7 @@ public class BattleInitializer : MonoBehaviour
 
         foreach (Character enemy in bm.enemyParty.charactersStartingInBack) {
             enemy.BattleReset(true);
-            CharacterCombatBehavior enemyObj = Instantiate(characterPrefab).GetComponent<CharacterCombatBehavior>();
+            CharacterBattleBehavior enemyObj = Instantiate(characterPrefab).GetComponent<CharacterBattleBehavior>();
             enemyObj.gameObject.name = enemy.name;
             enemyObj.gameObject.GetComponent<SpriteRenderer>().sprite = enemy.sprite;
             enemyObj.gameObject.GetComponent<SpriteRenderer>().flipX = true;

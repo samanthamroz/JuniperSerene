@@ -7,13 +7,13 @@ public class BattleManager : MonoBehaviour
 {
     [SerializeField] private GameObject playersFrontContainer, playersBackContainer, enemiesFrontContainer, enemiesBackContainer;
     [SerializeField] public Party enemyParty, playerParty;
-    private List<CharacterCombatBehavior> playersInFront = new();
-    private List<CharacterCombatBehavior> playersInBack = new();
-    private List<CharacterCombatBehavior> enemiesInFront = new();
-    private List<CharacterCombatBehavior> enemiesInBack = new();
-    private List<CharacterCombatBehavior> allCharacters {
+    private List<CharacterBattleBehavior> playersInFront = new();
+    private List<CharacterBattleBehavior> playersInBack = new();
+    private List<CharacterBattleBehavior> enemiesInFront = new();
+    private List<CharacterBattleBehavior> enemiesInBack = new();
+    private List<CharacterBattleBehavior> allCharacters {
         get {
-            List<CharacterCombatBehavior> aggregate = new List<CharacterCombatBehavior>();
+            List<CharacterBattleBehavior> aggregate = new List<CharacterBattleBehavior>();
             aggregate.AddRange(playersInFront);
             aggregate.AddRange(playersInBack);
             aggregate.AddRange(enemiesInFront);
@@ -21,8 +21,8 @@ public class BattleManager : MonoBehaviour
             return aggregate;
         }
     }
-    private List<CharacterCombatBehavior> currentTurn, nextTurn;
-    [SerializeField] public CharacterCombatBehavior curr {
+    private List<CharacterBattleBehavior> currentTurn, nextTurn;
+    [SerializeField] public CharacterBattleBehavior curr {
         get { return currentTurn[0]; }
     }
     public List<BattleAction> currBattleActions;
@@ -44,8 +44,8 @@ public class BattleManager : MonoBehaviour
     /*
     CHARACTER OBJECT MANAGEMENT
     */
-    public void NewCharacterPosition(CharacterCombatBehavior characterObj) {
-        List<CharacterCombatBehavior> listToPlace;
+    public void NewCharacterPosition(CharacterBattleBehavior characterObj) {
+        List<CharacterBattleBehavior> listToPlace;
         GameObject containerToPlace;
         int placeModifier;
 
@@ -92,9 +92,9 @@ public class BattleManager : MonoBehaviour
 
         characterObj.gameObject.transform.localScale = new Vector3(1.25f,1.25f,1.25f);
     }
-    private void UpdateCharacterPosition(CharacterCombatBehavior characterObj, bool isGoingToFront) {
-        List<CharacterCombatBehavior> listToLeave;
-        List<CharacterCombatBehavior> shiftLeft = new();
+    private void UpdateCharacterPosition(CharacterBattleBehavior characterObj, bool isGoingToFront) {
+        List<CharacterBattleBehavior> listToLeave;
+        List<CharacterBattleBehavior> shiftLeft = new();
 
         if (characterObj.character.isPlayable && !isGoingToFront) {
             listToLeave = playersInFront;
@@ -120,13 +120,13 @@ public class BattleManager : MonoBehaviour
         NewCharacterPosition(characterObj);
 
         //re-places each of the shiftLeft characters
-        foreach (CharacterCombatBehavior characterToShift in shiftLeft) {
+        foreach (CharacterBattleBehavior characterToShift in shiftLeft) {
             NewCharacterPosition(characterToShift);
         }
     }
     private void UpdateAllCharacterPositions() {
         //copies the data from the global lists
-        List<CharacterCombatBehavior> copyAggregate = playersInFront.GetRange(0, playersInFront.Count);
+        List<CharacterBattleBehavior> copyAggregate = playersInFront.GetRange(0, playersInFront.Count);
         copyAggregate.AddRange(playersInBack);
         copyAggregate.AddRange(enemiesInFront);
         copyAggregate.AddRange(enemiesInBack);
@@ -138,7 +138,7 @@ public class BattleManager : MonoBehaviour
         enemiesInBack.Clear();
 
         //repositions each character using the copied data
-        foreach (CharacterCombatBehavior character in copyAggregate) {
+        foreach (CharacterBattleBehavior character in copyAggregate) {
             NewCharacterPosition(character);
         }
     }
@@ -156,7 +156,7 @@ public class BattleManager : MonoBehaviour
     private void CreateNextTurnOrder() {
         nextTurn = new();
 
-        List<CharacterCombatBehavior> allCharactersCopy = allCharacters.GetRange(0, allCharacters.Count);
+        List<CharacterBattleBehavior> allCharactersCopy = allCharacters.GetRange(0, allCharacters.Count);
         while (allCharactersCopy.Count > 0) {
             int randIndex = UnityEngine.Random.Range(0, allCharactersCopy.Count);
             nextTurn.Add(allCharactersCopy[randIndex]);
@@ -188,12 +188,25 @@ public class BattleManager : MonoBehaviour
             ba.TurnStart(curr.gameObject);
             
             //wait for UI input
-            bc.RestartController();
+            bc.RestartController(false, true);
         }
     }
     private void ContinueCurrAction() {
+        //called when an action doesn't terminate the current turn
         bui.EnableActionMenu();
-        bc.RestartController();
+        bc.RestartController(false, false);
+    }
+    public void RestartCurrActionFromBaseMenu() {
+        //called when cancel is pressed while in an action menu
+        CreateBaseBattleMenu();
+        bui.EnableActionMenu();
+        bc.RestartController(true, true);
+    }
+    public void RestartCurrActionFromLastMenu() {
+        //called when cancel is pressed while selecting a target
+        CreateBattleSubMenu();
+        bui.EnableActionMenu();
+        bc.RestartController(true, true);
     }
     private void EndCurrentAction() {
         bc.StopController();
@@ -239,7 +252,7 @@ public class BattleManager : MonoBehaviour
             yield break;
         }
 
-        List<CharacterCombatBehavior> deadEnemyObjects = new();
+        List<CharacterBattleBehavior> deadEnemyObjects = new();
 
         for (int i = enemiesInFront.Count - 1; i >= 0; i--) {
             if (deadEnemies.Contains(enemiesInFront[i].character)) {
@@ -257,7 +270,7 @@ public class BattleManager : MonoBehaviour
        
         //Remove dead enemies from the current and next turn lists, since they have already been created
         //Destroy the dead enemy's gameObject
-        foreach (CharacterCombatBehavior deadEnemy in deadEnemyObjects) {
+        foreach (CharacterBattleBehavior deadEnemy in deadEnemyObjects) {
             if (currentTurn.Contains(deadEnemy)) {
                 StartCoroutine(bui.RemoveFromCurrentTurnUIAt(currentTurn.IndexOf(deadEnemy)));
                 currentTurn.Remove(deadEnemy);
@@ -274,7 +287,7 @@ public class BattleManager : MonoBehaviour
         //(specifically if an enemy not at the "end" or if the last enemy in the front was one who died)
         UpdateAllCharacterPositions();
         if (enemiesInFront.Count == 0) {
-            foreach (CharacterCombatBehavior enemy in enemiesInBack) {
+            foreach (CharacterBattleBehavior enemy in enemiesInBack) {
                 enemy.isInFront = true;
                 NewCharacterPosition(enemy);
             }
@@ -308,8 +321,8 @@ public class BattleManager : MonoBehaviour
         List<GameObject> getEligibleTargets(int actionCode): returns the current list of eligible targets for the given action code
         HandleTargettedAction(int actionCode, CCB target): executes targetted actions
     */
-    public List<CharacterCombatBehavior> GetEligibleTargets(BattleAction action) {
-        List<CharacterCombatBehavior> targets = new();
+    public List<CharacterBattleBehavior> GetEligibleTargets(BattleAction action) {
+        List<CharacterBattleBehavior> targets = new();
 
         if ((action.targetsFriends && curr.character.isPlayable) || (action.targetNeeded == TargetType.PARTY && !curr.character.isPlayable)) {
             targets.AddRange(playersInFront);
@@ -344,7 +357,7 @@ public class BattleManager : MonoBehaviour
 
         ContinueCurrAction();
     }
-    public void DoAction(BattleAction action, CharacterCombatBehavior target) {
+    public void DoAction(BattleAction action, CharacterBattleBehavior target) {
         bc.StopController();
         bui.DisableActionMenu();
 
@@ -355,7 +368,7 @@ public class BattleManager : MonoBehaviour
 
         ContinueCurrAction();
     }
-    public void DoAction(BattleAction action, CharacterCombatBehavior target, Weapon weapon) {
+    public void DoAction(BattleAction action, CharacterBattleBehavior target, Weapon weapon) {
         bc.StopController();
         bui.DisableActionMenu();
 
@@ -366,7 +379,7 @@ public class BattleManager : MonoBehaviour
 
         ContinueCurrAction();
     }
-    public void DoAction(BattleAction action, List<CharacterCombatBehavior> targets, Weapon weapon) {
+    public void DoAction(BattleAction action, List<CharacterBattleBehavior> targets, Weapon weapon) {
         bc.StopController();
         bui.DisableActionMenu();
 
@@ -380,7 +393,7 @@ public class BattleManager : MonoBehaviour
 
 
     private void DoEnemyAction() {
-        CharacterCombatBehavior chosenPlayer = playersInFront[UnityEngine.Random.Range(0, playersInFront.Count)];
+        CharacterBattleBehavior chosenPlayer = playersInFront[UnityEngine.Random.Range(0, playersInFront.Count)];
         int rand = UnityEngine.Random.Range(1, 11);
         if (rand > 8) {
             bui.ChangeActionText("Move");
@@ -398,7 +411,7 @@ public class BattleManager : MonoBehaviour
     public bool Move() {
         return Move(curr);
     }
-    private bool Move(CharacterCombatBehavior characterObj) {
+    private bool Move(CharacterBattleBehavior characterObj) {
         bool success = true;
         if ((playersInFront.Contains(characterObj) && playersInFront.Count > 1) ||
                 playersInBack.Contains(characterObj) ||

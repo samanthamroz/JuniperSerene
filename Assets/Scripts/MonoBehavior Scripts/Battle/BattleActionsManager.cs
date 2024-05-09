@@ -16,7 +16,7 @@ public class BattleActionsManager : MonoBehaviour
         bm = gameObject.GetComponent<BattleManager>();
     }
 
-    public bool IsPerformActionSuccessful(BattleAction action, CharacterCombatBehavior attacker) {
+    public bool IsPerformActionSuccessful(BattleAction action, CharacterBattleBehavior attacker) {
         if (action.targetNeeded != TargetType.NONE || action.weaponTypeNeeded != WeaponType.NONE) {
             throw new System.ArgumentException("Bad parameters for given action");
         }
@@ -43,7 +43,7 @@ public class BattleActionsManager : MonoBehaviour
                 throw new System.ArgumentException("Action name is undefined");
         }
     }
-    public bool IsPerformActionSuccessful(BattleAction action, CharacterCombatBehavior attacker, CharacterCombatBehavior target) {
+    public bool IsPerformActionSuccessful(BattleAction action, CharacterBattleBehavior attacker, CharacterBattleBehavior target) {
         if (action.targetNeeded == TargetType.NONE || action.weaponTypeNeeded != WeaponType.NONE) {
             throw new System.ArgumentException("Bad parameters for given action");
         }
@@ -53,7 +53,7 @@ public class BattleActionsManager : MonoBehaviour
                 throw new System.ArgumentException("Action name is undefined");
         }
     }
-    public bool IsPerformActionSuccessful(BattleAction action, CharacterCombatBehavior attacker, List<CharacterCombatBehavior> targetAll, Weapon weapon) {
+    public bool IsPerformActionSuccessful(BattleAction action, CharacterBattleBehavior attacker, List<CharacterBattleBehavior> targetAll, Weapon weapon) {
         /*
         if (action.targetNeeded == TargetType.PARTY || weapon.weaponType != action.weaponTypeNeeded) {
             throw new System.ArgumentException("Bad parameters for given action");
@@ -65,22 +65,22 @@ public class BattleActionsManager : MonoBehaviour
         bui.ChangeActionText(action.displayName);
         switch (action.displayName) {
             case "Wild Slash":
-                foreach (CharacterCombatBehavior target in targetAll) {
+                foreach (CharacterBattleBehavior target in targetAll) {
                     StartCoroutine(BasicAttack(attacker, target, weapon));
                 }
                 return true;
             case "Quick Slash":
-                foreach (CharacterCombatBehavior target in targetAll) {
+                foreach (CharacterBattleBehavior target in targetAll) {
                     StartCoroutine(BasicAttack(attacker, target, weapon));
                 }
                 return true;
             case "Multi-Stab":
-                foreach (CharacterCombatBehavior target in targetAll) {
+                foreach (CharacterBattleBehavior target in targetAll) {
                     StartCoroutine(BasicAttack(attacker, target, weapon));
                 }
                 return true;
             case "Clobber":
-                foreach (CharacterCombatBehavior target in targetAll) {
+                foreach (CharacterBattleBehavior target in targetAll) {
                     StartCoroutine(BasicAttack(attacker, target, weapon));
                 }
                 return true;
@@ -88,7 +88,7 @@ public class BattleActionsManager : MonoBehaviour
                 throw new System.Exception("Action name is undefined");
         }
     }
-    public bool IsPerformActionSuccessful(BattleAction action, CharacterCombatBehavior attacker, CharacterCombatBehavior target, Weapon weapon) {
+    public bool IsPerformActionSuccessful(BattleAction action, CharacterBattleBehavior attacker, CharacterBattleBehavior target, Weapon weapon) {
         if (action.targetNeeded == TargetType.NONE || (action.weaponTypeNeeded != WeaponType.ANY && action.weaponTypeNeeded != weapon.weaponType)) {
             throw new System.ArgumentException("Bad parameters for given ");
         }
@@ -111,7 +111,7 @@ public class BattleActionsManager : MonoBehaviour
     private void Surrender() {
         Debug.Log("You surrendered! Too bad!");
     }
-    private IEnumerator BasicAttack(CharacterCombatBehavior attacker, CharacterCombatBehavior target, Weapon weapon) {
+    private IEnumerator BasicAttack(CharacterBattleBehavior attacker, CharacterBattleBehavior target, Weapon weapon) {
         //actual attack
         int[] totalDamageDone = weapon.GetBasicAttackDamage();
         foreach (int damage in totalDamageDone) {

@@ -20,7 +20,7 @@ public class BattleUIManager : MonoBehaviour
     [SerializeField] private Color buttonClearColor, buttonHighlightColor, buttonPressedColor, buttonLockedColor;
     private List<GameObject> currentTurnUI, nextTurnUI;
 
-    public IEnumerator CreateNewTurnUI(List<CharacterCombatBehavior> currentTurn, List<CharacterCombatBehavior> nextTurn) {
+    public IEnumerator CreateNewTurnUI(List<CharacterBattleBehavior> currentTurn, List<CharacterBattleBehavior> nextTurn) {
         //Clear display
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("UI Image"))
         {
@@ -30,7 +30,7 @@ public class BattleUIManager : MonoBehaviour
         
         //display current turn
         currentTurnUI = new List<GameObject>();
-        foreach (CharacterCombatBehavior characterObj in currentTurn) {
+        foreach (CharacterBattleBehavior characterObj in currentTurn) {
             GameObject curr;
             curr = Instantiate(characterImagePrefab, currentTurnContainer.transform.GetChild(1));
 
@@ -39,7 +39,7 @@ public class BattleUIManager : MonoBehaviour
         }
         
         nextTurnUI = new List<GameObject>();
-        foreach (CharacterCombatBehavior characterObj in nextTurn) {
+        foreach (CharacterBattleBehavior characterObj in nextTurn) {
             GameObject temp;
             temp = Instantiate(characterImagePrefab, nextTurnContainer.transform.GetChild(1));
 
@@ -101,7 +101,7 @@ public class BattleUIManager : MonoBehaviour
     public void DisableActionMenu() {
         actionMenuButtonsContainer.transform.parent.gameObject.SetActive(false);
     }
-    public IEnumerator DrawNewActionMenu(List<BattleAction> actions, CharacterCombatBehavior curr, bool isBaseMenu) {
+    public IEnumerator DrawNewActionMenu(List<BattleAction> actions, CharacterBattleBehavior curr, bool isBaseMenu) {
         //Destroy all existing buttons (except basic button container)
         for (int i = actionMenuButtonsContainer.transform.childCount - 1; i >= 1; i--) {
             Destroy(actionMenuButtonsContainer.transform.GetChild(i).gameObject);
@@ -179,7 +179,7 @@ public class BattleUIManager : MonoBehaviour
             DescriptionFormattingHelper(curr, button);
         }
     }
-    private void DrawNonBaseActionMenu(List<BattleAction> actions, CharacterCombatBehavior curr) {
+    private void DrawNonBaseActionMenu(List<BattleAction> actions, CharacterBattleBehavior curr) {
         List<GameObject> buttonObjects = new();
         //gameObject.GetComponent<Image>().color = Color.grey;
         actionMenuButtonsContainer.transform.GetChild(0).gameObject.SetActive(false);
@@ -221,7 +221,7 @@ public class BattleUIManager : MonoBehaviour
         }
         buttonObjects[^1].GetComponent<ActionMenuButton>().next = buttonObjects[^1];
     }
-    private void DescriptionFormattingHelper(CharacterCombatBehavior character, GameObject button) {
+    private void DescriptionFormattingHelper(CharacterBattleBehavior character, GameObject button) {
         static string AppendMoveText(string str) {
             str = char.ToLower(str[0]).ToString() + str[1..];
             return "Move to front and " + str;

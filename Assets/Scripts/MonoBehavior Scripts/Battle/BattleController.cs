@@ -14,14 +14,14 @@ public class BattleController : MonoBehaviour
     [SerializeField] private GameObject actionMenuButtonsContainer;
 
     //Controller Variables
-    private bool isInActionMenu;
-    private bool isControllerActive;
+    private bool isInActionMenu, isControllerActive;
 
     //Selected Action Variables
     private ActionMenuButton selectedActionButton;
     private BattleAction currAction { get { return selectedActionButton.associatedAction; } }
-    private List<CharacterCombatBehavior> selectedActionTargets;
-    private CharacterCombatBehavior selectedActionMainTarget;
+    private BattleAction previousSelectedAction;
+    private List<CharacterBattleBehavior> selectedActionTargets;
+    private CharacterBattleBehavior selectedActionMainTarget;
 
     void Awake()
     {
@@ -31,12 +31,17 @@ public class BattleController : MonoBehaviour
     public void StopController() {
         isControllerActive = false;
     }
-    public void RestartController() {
-        StartCoroutine(ChooseNewSelectedAction());
+    public void RestartController(bool usePreviousAction, bool overwritePrevious) {
+        if (usePreviousAction) {
+            StartCoroutine(ChoosePreviousSelectedAction(overwritePrevious));
+        } else {
+            StartCoroutine(ChooseNewSelectedAction(overwritePrevious));
+        }
+        
         isControllerActive = true;
         isInActionMenu = true;
     }
-    private IEnumerator ChooseNewSelectedAction() {
+    private IEnumerator ChooseNewSelectedAction(bool overwritePrevious) {
         yield return null;
         //Reset
         selectedActionTargets = null;
@@ -55,6 +60,53 @@ public class BattleController : MonoBehaviour
             if (selectedActionButton == null) {
                 throw new Exception("No valid starting button found");
             }
+        }
+
+        if (overwritePrevious) {
+            previousSelectedAction = null;
+        }
+       
+        bui.SetButtonColor(selectedActionButton.gameObject, ButtonState.HIGHLIGHTED);
+        bui.UpdateTab(selectedActionButton.gameObject);
+    }
+    private IEnumerator ChoosePreviousSelectedAction(bool overwritePrevious) {
+        yield return null;
+        
+        selectedActionTargets = null;
+        selectedActionMainTarget = null;
+        selectedActionButton = null;
+
+        int startIndex = 0;
+        if (actionMenuButtonsContainer.transform.GetChild(0).childCount > 0) {
+            for (int i = 0; i < actionMenuButtonsContainer.transform.GetChild(0).childCount; i++) {
+                if (actionMenuButtonsContainer.transform.GetChild(0).GetChild(i).gameObject.GetComponent<ActionMenuButton>().associatedAction == previousSelectedAction) {
+                    selectedActionButton = actionMenuButtonsContainer.transform.GetChild(0).GetChild(i).gameObject.GetComponent<ActionMenuButton>();
+                    break;
+                }
+            }
+            startIndex = 1;
+        } 
+
+        ActionMenuButton temp;
+        if (selectedActionButton == null) {
+            for (int i = startIndex; i < actionMenuButtonsContainer.transform.childCount; i++) {
+                actionMenuButtonsContainer.transform.GetChild(i).gameObject.TryGetComponent<ActionMenuButton>(out temp);
+                try { 
+                    if (temp.GetComponent<ActionMenuButton>().associatedAction == previousSelectedAction) {
+                        selectedActionButton = temp;
+                        break;
+                    }
+                } catch {
+
+                }
+            }
+            if (selectedActionButton == null) {
+                throw new Exception("No valid starting button found");
+            }
+        }
+
+        if (overwritePrevious) {
+            previousSelectedAction = null;
         }
 
         bui.SetButtonColor(selectedActionButton.gameObject, ButtonState.HIGHLIGHTED);
@@ -116,7 +168,7 @@ public class BattleController : MonoBehaviour
             }
         }
 
-        foreach (CharacterCombatBehavior target in selectedActionTargets) {
+        foreach (CharacterBattleBehavior target in selectedActionTargets) {
             if (target != selectedActionMainTarget) {
                 bui.DrawSelectionPointer(target.gameObject.transform.position, 
                     currAction.targetNeeded == TargetType.ALL || currAction.targetNeeded == TargetType.PARTY || currAction.targetNeeded == TargetType.MULTI);
@@ -131,46 +183,70 @@ public class BattleController : MonoBehaviour
             return;
         }
 
+        previousSelectedAction = currAction;
+
         if (isInActionMenu) {
-            //get eligible targets for action code
-
-            if (currAction.targetNeeded == TargetType.NONE) {
-                bm.DoAction(currAction);
-            } else {
-                selectedActionTargets = bm.GetEligibleTargets(currAction);
-                selectedActionMainTarget = selectedActionTargets[0];
-
-                foreach (CharacterCombatBehavior target in selectedActionTargets) {
-                    if (target != selectedActionMainTarget) {
-                        bui.DrawSelectionPointer(target.gameObject.transform.position, 
-                            currAction.targetNeeded == TargetType.ALL || currAction.targetNeeded == TargetType.PARTY || currAction.targetNeeded == TargetType.MULTI);
-                    }
-                }
-                bui.DrawSelectionPointer(selectedActionMainTarget.gameObject.transform.position, true);
-
-                isInActionMenu = false;
-            }
+            SubmitAction();
         } else {
-            if (selectedActionButton.associatedWeapon != null && 
-                    (currAction.targetNeeded == TargetType.ALL || currAction.targetNeeded == TargetType.PARTY || currAction.targetNeeded == TargetType.MULTI)) {
-                bm.DoAction(currAction, selectedActionTargets, selectedActionButton.associatedWeapon);
-            } else if (selectedActionButton.associatedWeapon != null) {
-                bm.DoAction(currAction, selectedActionMainTarget, selectedActionButton.associatedWeapon);
-            } else {
-                bm.DoAction(currAction, selectedActionMainTarget);
-            }
-
-            StartCoroutine(bui.RemoveAllSelectionPointers());
-            isInActionMenu = true;
+            SubmitTarget();
         }
     }
+    private void SubmitAction() {
+        if (currAction.targetNeeded == TargetType.NONE) {
+            bm.DoAction(currAction);
+        } else {
+            selectedActionTargets = bm.GetEligibleTargets(currAction);
+            selectedActionMainTarget = selectedActionTargets[0];
 
+            foreach (CharacterBattleBehavior target in selectedActionTargets) {
+                if (target != selectedActionMainTarget) {
+                    bui.DrawSelectionPointer(target.gameObject.transform.position, 
+                        currAction.targetNeeded == TargetType.ALL || currAction.targetNeeded == TargetType.PARTY || currAction.targetNeeded == TargetType.MULTI);
+                }
+            }
+            bui.DrawSelectionPointer(selectedActionMainTarget.gameObject.transform.position, true);
+
+            isInActionMenu = false;
+        }
+    }
+    private void SubmitTarget() {
+        if (selectedActionButton.associatedWeapon != null && 
+                (currAction.targetNeeded == TargetType.ALL || currAction.targetNeeded == TargetType.PARTY || currAction.targetNeeded == TargetType.MULTI)) {
+            bm.DoAction(currAction, selectedActionTargets, selectedActionButton.associatedWeapon);
+        } else if (selectedActionButton.associatedWeapon != null) {
+            bm.DoAction(currAction, selectedActionMainTarget, selectedActionButton.associatedWeapon);
+        } else {
+            bm.DoAction(currAction, selectedActionMainTarget);
+        }
+
+        StartCoroutine(bui.RemoveAllSelectionPointers());
+        isInActionMenu = true;
+    }
+
+    //CANCEL
     private void OnCancel() {
         if (!isControllerActive) {
             return;
         }
+
+        if (isInActionMenu) {
+            CancelFromAction();
+        } else {
+            CancelFromTarget();
+        }
+    }
+    
+    private void CancelFromAction() {
+        if (previousSelectedAction != null) {
+            bm.RestartCurrActionFromBaseMenu();
+        }
+    }
+    private void CancelFromTarget() {
+        StartCoroutine(bui.RemoveAllSelectionPointers());
+        bm.RestartCurrActionFromLastMenu(); //<- only works since the menus only go 1 layer deep. if you add another layer somehow, this will have to be fixed
     }
 
+    //TAB
     private void OnTab() {
         if (!isControllerActive) {
             return;
