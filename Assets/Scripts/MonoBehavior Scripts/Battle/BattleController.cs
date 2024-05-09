@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 public class BattleController : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class BattleController : MonoBehaviour
     //Selected Action Variables
     private ActionMenuButton selectedActionButton;
     private BattleAction currAction { get { return selectedActionButton.associatedAction; } }
-    private BattleAction previousSelectedAction;
+    private Stack<BattleAction> previousActionStack = new();
     private List<CharacterBattleBehavior> selectedActionTargets;
     private CharacterBattleBehavior selectedActionMainTarget;
 
@@ -31,22 +32,33 @@ public class BattleController : MonoBehaviour
     public void StopController() {
         isControllerActive = false;
     }
-    public void RestartController(bool usePreviousAction, bool overwritePrevious) {
+    public void RestartController(bool usePreviousAction, bool clearPreviousActions) {
+        Debug.Log("At restart, size = " +previousActionStack.Size());
+
+        if (clearPreviousActions) {
+            usePreviousAction = false;
+            previousActionStack.Clear();
+        }
+
         if (usePreviousAction) {
-            StartCoroutine(ChoosePreviousSelectedAction(overwritePrevious));
+            StartCoroutine(ChoosePreviousSelectedAction());
         } else {
-            StartCoroutine(ChooseNewSelectedAction(overwritePrevious));
+            StartCoroutine(ChooseTopSelectedAction());
         }
         
         isControllerActive = true;
         isInActionMenu = true;
     }
-    private IEnumerator ChooseNewSelectedAction(bool overwritePrevious) {
+    private IEnumerator ChooseTopSelectedAction() {
         yield return null;
         //Reset
         selectedActionTargets = null;
         selectedActionMainTarget = null;
         selectedActionButton = null;
+
+        if (actionMenuButtonsContainer.transform.GetChild(0).gameObject.activeSelf) {
+            previousActionStack.Pop();
+        }
         
         //search for top button in menu
         if (actionMenuButtonsContainer.transform.GetChild(0).childCount > 0) {
@@ -61,15 +73,13 @@ public class BattleController : MonoBehaviour
                 throw new Exception("No valid starting button found");
             }
         }
-
-        if (overwritePrevious) {
-            previousSelectedAction = null;
-        }
        
         bui.SetButtonColor(selectedActionButton.gameObject, ButtonState.HIGHLIGHTED);
         bui.UpdateTab(selectedActionButton.gameObject);
+
+        Debug.Log("After choose top action, size = " + previousActionStack.Size());
     }
-    private IEnumerator ChoosePreviousSelectedAction(bool overwritePrevious) {
+    private IEnumerator ChoosePreviousSelectedAction() {
         yield return null;
         
         selectedActionTargets = null;
@@ -79,7 +89,7 @@ public class BattleController : MonoBehaviour
         int startIndex = 0;
         if (actionMenuButtonsContainer.transform.GetChild(0).childCount > 0) {
             for (int i = 0; i < actionMenuButtonsContainer.transform.GetChild(0).childCount; i++) {
-                if (actionMenuButtonsContainer.transform.GetChild(0).GetChild(i).gameObject.GetComponent<ActionMenuButton>().associatedAction == previousSelectedAction) {
+                if (actionMenuButtonsContainer.transform.GetChild(0).GetChild(i).gameObject.GetComponent<ActionMenuButton>().associatedAction == previousActionStack.Peek()) {
                     selectedActionButton = actionMenuButtonsContainer.transform.GetChild(0).GetChild(i).gameObject.GetComponent<ActionMenuButton>();
                     break;
                 }
@@ -92,7 +102,7 @@ public class BattleController : MonoBehaviour
             for (int i = startIndex; i < actionMenuButtonsContainer.transform.childCount; i++) {
                 actionMenuButtonsContainer.transform.GetChild(i).gameObject.TryGetComponent<ActionMenuButton>(out temp);
                 try { 
-                    if (temp.GetComponent<ActionMenuButton>().associatedAction == previousSelectedAction) {
+                    if (temp.GetComponent<ActionMenuButton>().associatedAction == previousActionStack.Peek()) {
                         selectedActionButton = temp;
                         break;
                     }
@@ -104,13 +114,12 @@ public class BattleController : MonoBehaviour
                 throw new Exception("No valid starting button found");
             }
         }
-
-        if (overwritePrevious) {
-            previousSelectedAction = null;
-        }
-
+        previousActionStack.Pop();
+        
         bui.SetButtonColor(selectedActionButton.gameObject, ButtonState.HIGHLIGHTED);
         bui.UpdateTab(selectedActionButton.gameObject);
+
+        Debug.Log("After choose previous action, size = " + previousActionStack.Size());
     }
     
     //NAVIGATE
@@ -183,7 +192,8 @@ public class BattleController : MonoBehaviour
             return;
         }
 
-        previousSelectedAction = currAction;
+        previousActionStack.Push(currAction);
+        Debug.Log("After submit, size = " + previousActionStack.Size());
 
         if (isInActionMenu) {
             SubmitAction();
@@ -229,21 +239,16 @@ public class BattleController : MonoBehaviour
             return;
         }
 
-        if (isInActionMenu) {
-            CancelFromAction();
-        } else {
-            CancelFromTarget();
-        }
-    }
-    
-    private void CancelFromAction() {
-        if (previousSelectedAction != null) {
-            bm.RestartCurrActionFromBaseMenu();
-        }
-    }
-    private void CancelFromTarget() {
+        Debug.Log("Before cancel, size = " + previousActionStack.Size());
         StartCoroutine(bui.RemoveAllSelectionPointers());
-        bm.RestartCurrActionFromLastMenu(); //<- only works since the menus only go 1 layer deep. if you add another layer somehow, this will have to be fixed
+
+        if (previousActionStack.IsEmpty()) {
+
+        } else if (previousActionStack.Size() == 1) {
+            bm.RestartCurrActionFromBaseMenu();
+        } else if (previousActionStack.Size() >= 2) {
+            bm.RestartCurrActionFromLastMenu();
+        }
     }
 
     //TAB

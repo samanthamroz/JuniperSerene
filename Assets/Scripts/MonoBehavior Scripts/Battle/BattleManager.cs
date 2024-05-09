@@ -191,8 +191,13 @@ public class BattleManager : MonoBehaviour
             bc.RestartController(false, true);
         }
     }
-    private void ContinueCurrAction() {
+    private void ContinueCurrAction(bool inBaseMenu = false) {
         //called when an action doesn't terminate the current turn
+        if (inBaseMenu) {
+            CreateBaseBattleMenu();
+        } else {
+            CreateBattleSubMenu();
+        }
         bui.EnableActionMenu();
         bc.RestartController(false, false);
     }
@@ -200,13 +205,13 @@ public class BattleManager : MonoBehaviour
         //called when cancel is pressed while in an action menu
         CreateBaseBattleMenu();
         bui.EnableActionMenu();
-        bc.RestartController(true, true);
+        bc.RestartController(true, false);
     }
     public void RestartCurrActionFromLastMenu() {
         //called when cancel is pressed while selecting a target
         CreateBattleSubMenu();
         bui.EnableActionMenu();
-        bc.RestartController(true, true);
+        bc.RestartController(true, false);
     }
     private void EndCurrentAction() {
         bc.StopController();

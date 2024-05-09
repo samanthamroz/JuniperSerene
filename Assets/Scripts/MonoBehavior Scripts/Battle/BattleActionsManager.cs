@@ -24,11 +24,11 @@ public class BattleActionsManager : MonoBehaviour
         switch (action.displayName) {
             case "Attacks":
                 bui.RemoveActionText();
-                StartCoroutine(bui.DrawNewActionMenu(attacker.character.attacksList, attacker, false));
+                bm.currBattleActions = attacker.character.attacksList;
                 return false;
             case "Abilities":
                 bui.RemoveActionText();
-                StartCoroutine(bui.DrawNewActionMenu(attacker.character.abilitiesList, attacker, false));
+                bm.currBattleActions = attacker.character.abilitiesList;
                 return false;
             case "Retreat":
                 bm.Move();

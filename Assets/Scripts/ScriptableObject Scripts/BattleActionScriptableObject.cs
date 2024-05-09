@@ -9,6 +9,11 @@ public class BattleAction : ScriptableObject
     public bool targetsFriends = false;
     public WeaponType weaponTypeNeeded;
     public TargetType targetNeeded;
+
+    public override string ToString()
+    {
+        return displayName;
+    }
 }
 
 public enum TargetType {
