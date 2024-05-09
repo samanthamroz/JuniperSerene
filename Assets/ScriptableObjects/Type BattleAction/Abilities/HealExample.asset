@@ -9,11 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aeadfd37af8b4df4e999f97d1b001879, type: 3}
-  m_Name: _debug_SwordOfTheSun
+  m_Script: {fileID: 11500000, guid: c5dd44f325e294f438b5fcc70d563ffb, type: 3}
+  m_Name: HealExample
   m_EditorClassIdentifier: 
-  name: Sword of the Sun
-  damage: 99
-  weaponType: 2
-  hasAugment: 0
-  sprite: {fileID: 21300000, guid: 7726bd1e2cc6884418c009de5a133c4f, type: 3}
+  displayName: Bandage
+  description: Heal one party member's HP to full
+  needsCharacterData: 0
+  targetsFriends: 1
+  weaponTypeNeeded: 0
+  targetNeeded: 1

@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: Luwan
   m_EditorClassIdentifier: 
   maxHealth: 1500
-  currentHealth: 1500
-  currentVie: 1500
+  currentHealth: 1325
+  currentVie: 1325
   weaponsList:
   - {fileID: 11400000, guid: 322bd8e2c386ece4fa0358f6aefb8412, type: 2}
   attacksList:
+  - {fileID: 11400000, guid: df258c639f31871418050860946441bb, type: 2}
   - {fileID: 11400000, guid: df258c639f31871418050860946441bb, type: 2}
   abilitiesList:
   - {fileID: 11400000, guid: cbf6e28afa6266e4b8be0f589c6b0817, type: 2}
@@ -28,5 +29,5 @@ MonoBehaviour:
   sprite: {fileID: 1359068085, guid: 08333cefcc4061d4394d09ba9c6f9600, type: 3}
   uiSprite: {fileID: 21300000, guid: 2549899b482f4fa4d8f0d1131d8c8d03, type: 3}
   gameObject: {fileID: 0}
-  next: {fileID: 11400000, guid: cbea704980c84f349bf8b2cb758641ec, type: 2}
-  prev: {fileID: 11400000, guid: 1d9dfaa6c2f72324aa1ee29c9a3b5005, type: 2}
+  next: {fileID: 11400000, guid: f098c9fc7e90f0c4ea08f26f7897305e, type: 2}
+  prev: {fileID: 11400000, guid: e381f7bedbaec8e4e8f280c9edabd178, type: 2}

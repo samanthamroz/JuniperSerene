@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c5dd44f325e294f438b5fcc70d563ffb, type: 3}
-  m_Name: _debug_PoleAttackExample 2
+  m_Name: AbilityExample
   m_EditorClassIdentifier: 
-  displayName: Multi-Stab
-  description: Attack all enemies with /weapon/
+  displayName: Insight
+  description: "Temporarily reveal an enemy\u2019s health"
   needsCharacterData: 0
-  weaponTypeNeeded: 5
-  targetNeeded: 3
+  weaponTypeNeeded: 0
+  targetNeeded: 1

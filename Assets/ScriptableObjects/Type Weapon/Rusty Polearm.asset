@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aeadfd37af8b4df4e999f97d1b001879, type: 3}
-  m_Name: _debug_MoonlitStaff
+  m_Name: Rusty Polearm
   m_EditorClassIdentifier: 
-  name: Moonlit Staff
-  damage: 32
-  weaponType: 4
+  name: Rusty Polearm
+  damage: 62
+  weaponType: 5
   hasAugment: 0
-  sprite: {fileID: 21300000, guid: 43a2e378c72dcee47bd7165922ce3cf3, type: 3}
+  sprite: {fileID: 21300000, guid: 21141942a535bb248aec42104555437f, type: 3}

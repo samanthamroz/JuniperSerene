@@ -13,16 +13,12 @@ public class Character : ScriptableObject
     public List<BattleAction> abilitiesList;
     
     //BATTLE POSITIONING
-    public bool isInFront, isPlayable;
+    public bool isPlayable;
 
     //BATTLE DISPLAY PROPERTIES
     public new string name;
     public string role;
     public Sprite sprite, uiSprite;
-
-    //REFERENCES TO OBJECTS IN SCENE
-    [HideInInspector] public GameObject gameObject;
-    [HideInInspector] public Character next, prev;
 
     void OnValidate() {
         //called when a value is changed in the inspector
@@ -34,8 +30,12 @@ public class Character : ScriptableObject
         if (resetHealth) {
             OnValidate();
         }
-        gameObject = null;
-        next = null;
-        prev = null;
+    }
+
+    public void Hurt(int damageDone) {
+        currentHealth -= damageDone;
+        if (currentVie > currentHealth) {
+            currentVie = currentHealth;
+        }
     }
 }

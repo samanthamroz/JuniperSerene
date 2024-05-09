@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c5dd44f325e294f438b5fcc70d563ffb, type: 3}
-  m_Name: _debug_StaffAttackExample
+  m_Name: DaggerAttackExample
   m_EditorClassIdentifier: 
-  displayName: Clobber
+  displayName: Quick Slash
   description: Attack all enemies with /weapon/
   needsCharacterData: 0
-  weaponTypeNeeded: 4
+  weaponTypeNeeded: 3
   targetNeeded: 3

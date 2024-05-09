@@ -20,8 +20,8 @@ public class BattleController : MonoBehaviour
     //Selected Action Variables
     private ActionMenuButton selectedActionButton;
     private BattleAction currAction { get { return selectedActionButton.associatedAction; } }
-    private List<Character> selectedActionTargets;
-    private Character selectedActionMainTarget;
+    private List<CharacterCombatBehavior> selectedActionTargets;
+    private CharacterCombatBehavior selectedActionMainTarget;
 
     void Awake()
     {
@@ -53,7 +53,7 @@ public class BattleController : MonoBehaviour
                 }
             }
             if (selectedActionButton == null) {
-                throw new System.Exception("No valid starting button found");
+                throw new Exception("No valid starting button found");
             }
         }
 
@@ -61,6 +61,7 @@ public class BattleController : MonoBehaviour
         bui.UpdateTab(selectedActionButton.gameObject);
     }
     
+    //NAVIGATE
     private void OnNavigate(InputValue value) {
         if (!isControllerActive) {
             return;
@@ -115,7 +116,7 @@ public class BattleController : MonoBehaviour
             }
         }
 
-        foreach (Character target in selectedActionTargets) {
+        foreach (CharacterCombatBehavior target in selectedActionTargets) {
             if (target != selectedActionMainTarget) {
                 bui.DrawSelectionPointer(target.gameObject.transform.position, 
                     currAction.targetNeeded == TargetType.ALL || currAction.targetNeeded == TargetType.PARTY || currAction.targetNeeded == TargetType.MULTI);
@@ -124,6 +125,7 @@ public class BattleController : MonoBehaviour
         bui.DrawSelectionPointer(selectedActionMainTarget.gameObject.transform.position, true);
     }
 
+    //SUBMIT
     private void OnSubmit() {
         if (!isControllerActive) {
             return;
@@ -135,10 +137,10 @@ public class BattleController : MonoBehaviour
             if (currAction.targetNeeded == TargetType.NONE) {
                 bm.DoAction(currAction);
             } else {
-                selectedActionTargets = bm.GetEligibleTargets(currAction.targetNeeded);
+                selectedActionTargets = bm.GetEligibleTargets(currAction);
                 selectedActionMainTarget = selectedActionTargets[0];
 
-                foreach (Character target in selectedActionTargets) {
+                foreach (CharacterCombatBehavior target in selectedActionTargets) {
                     if (target != selectedActionMainTarget) {
                         bui.DrawSelectionPointer(target.gameObject.transform.position, 
                             currAction.targetNeeded == TargetType.ALL || currAction.targetNeeded == TargetType.PARTY || currAction.targetNeeded == TargetType.MULTI);
@@ -149,7 +151,10 @@ public class BattleController : MonoBehaviour
                 isInActionMenu = false;
             }
         } else {
-            if (selectedActionButton.associatedWeapon != null) {
+            if (selectedActionButton.associatedWeapon != null && 
+                    (currAction.targetNeeded == TargetType.ALL || currAction.targetNeeded == TargetType.PARTY || currAction.targetNeeded == TargetType.MULTI)) {
+                bm.DoAction(currAction, selectedActionTargets, selectedActionButton.associatedWeapon);
+            } else if (selectedActionButton.associatedWeapon != null) {
                 bm.DoAction(currAction, selectedActionMainTarget, selectedActionButton.associatedWeapon);
             } else {
                 bm.DoAction(currAction, selectedActionMainTarget);

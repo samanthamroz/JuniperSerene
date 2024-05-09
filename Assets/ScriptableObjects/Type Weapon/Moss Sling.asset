@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aeadfd37af8b4df4e999f97d1b001879, type: 3}
-  m_Name: _debug_RustyPolearm
+  m_Name: Moss Sling
   m_EditorClassIdentifier: 
-  name: Rusty Polearm
-  damage: 62
-  weaponType: 5
+  name: Moss Sling
+  damage: 25
+  weaponType: 7
   hasAugment: 0
-  sprite: {fileID: 21300000, guid: 21141942a535bb248aec42104555437f, type: 3}
+  sprite: {fileID: 21300000, guid: d950ebe34974e0040b627ce0af7f2e82, type: 3}

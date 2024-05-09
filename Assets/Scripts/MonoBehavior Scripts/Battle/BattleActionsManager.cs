@@ -16,7 +16,7 @@ public class BattleActionsManager : MonoBehaviour
         bm = gameObject.GetComponent<BattleManager>();
     }
 
-    public bool IsPerformActionSuccessful(BattleAction action, Character attacker) {
+    public bool IsPerformActionSuccessful(BattleAction action, CharacterCombatBehavior attacker) {
         if (action.targetNeeded != TargetType.NONE || action.weaponTypeNeeded != WeaponType.NONE) {
             throw new System.ArgumentException("Bad parameters for given action");
         }
@@ -24,11 +24,11 @@ public class BattleActionsManager : MonoBehaviour
         switch (action.displayName) {
             case "Attacks":
                 bui.RemoveActionText();
-                bui.DrawNewActionMenu(attacker.attacksList, attacker, false);
+                StartCoroutine(bui.DrawNewActionMenu(attacker.character.attacksList, attacker, false));
                 return false;
             case "Abilities":
                 bui.RemoveActionText();
-                bui.DrawNewActionMenu(attacker.abilitiesList, attacker, false);
+                StartCoroutine(bui.DrawNewActionMenu(attacker.character.abilitiesList, attacker, false));
                 return false;
             case "Retreat":
                 bm.Move();
@@ -43,8 +43,7 @@ public class BattleActionsManager : MonoBehaviour
                 throw new System.ArgumentException("Action name is undefined");
         }
     }
-
-    public bool IsPerformActionSuccessful(BattleAction action, Character attacker, Character target) {
+    public bool IsPerformActionSuccessful(BattleAction action, CharacterCombatBehavior attacker, CharacterCombatBehavior target) {
         if (action.targetNeeded == TargetType.NONE || action.weaponTypeNeeded != WeaponType.NONE) {
             throw new System.ArgumentException("Bad parameters for given action");
         }
@@ -54,31 +53,34 @@ public class BattleActionsManager : MonoBehaviour
                 throw new System.ArgumentException("Action name is undefined");
         }
     }
-
-    public bool IsPerformActionSuccessful(BattleAction action, Character attacker, Party targetAll, Weapon weapon) {
+    public bool IsPerformActionSuccessful(BattleAction action, CharacterCombatBehavior attacker, List<CharacterCombatBehavior> targetAll, Weapon weapon) {
         /*
         if (action.targetNeeded == TargetType.PARTY || weapon.weaponType != action.weaponTypeNeeded) {
             throw new System.ArgumentException("Bad parameters for given action");
         } */
+        if (!attacker.isInFront) {
+            bm.Move();
+        }
+
         bui.ChangeActionText(action.displayName);
         switch (action.displayName) {
             case "Wild Slash":
-                foreach (Character target in targetAll.partyCharacters) {
+                foreach (CharacterCombatBehavior target in targetAll) {
                     StartCoroutine(BasicAttack(attacker, target, weapon));
                 }
                 return true;
             case "Quick Slash":
-                foreach (Character target in targetAll.partyCharacters) {
+                foreach (CharacterCombatBehavior target in targetAll) {
                     StartCoroutine(BasicAttack(attacker, target, weapon));
                 }
                 return true;
             case "Multi-Stab":
-                foreach (Character target in targetAll.partyCharacters) {
+                foreach (CharacterCombatBehavior target in targetAll) {
                     StartCoroutine(BasicAttack(attacker, target, weapon));
                 }
                 return true;
             case "Clobber":
-                foreach (Character target in targetAll.partyCharacters) {
+                foreach (CharacterCombatBehavior target in targetAll) {
                     StartCoroutine(BasicAttack(attacker, target, weapon));
                 }
                 return true;
@@ -86,11 +88,15 @@ public class BattleActionsManager : MonoBehaviour
                 throw new System.Exception("Action name is undefined");
         }
     }
-
-    public bool IsPerformActionSuccessful(BattleAction action, Character attacker, Character target, Weapon weapon) {
+    public bool IsPerformActionSuccessful(BattleAction action, CharacterCombatBehavior attacker, CharacterCombatBehavior target, Weapon weapon) {
         if (action.targetNeeded == TargetType.NONE || (action.weaponTypeNeeded != WeaponType.ANY && action.weaponTypeNeeded != weapon.weaponType)) {
             throw new System.ArgumentException("Bad parameters for given ");
         }
+
+        if (!attacker.isInFront) {
+            bm.Move();
+        }
+
         bui.ChangeActionText(action.displayName);
         switch (action.displayName) {
             case "":
@@ -102,28 +108,19 @@ public class BattleActionsManager : MonoBehaviour
         }
     }
 
-    private void Hurt(Character target, int damageDone) {
-        target.currentHealth -= damageDone;
-        if (target.currentVie > target.currentHealth) {
-            target.currentVie = target.currentHealth;
-        }
-    }
-
     private void Surrender() {
-        bui.ChangeActionText("Surrender");
         Debug.Log("You surrendered! Too bad!");
     }
-
-    private IEnumerator BasicAttack(Character attacker, Character target, Weapon weapon) {
+    private IEnumerator BasicAttack(CharacterCombatBehavior attacker, CharacterCombatBehavior target, Weapon weapon) {
         //actual attack
         int[] totalDamageDone = weapon.GetBasicAttackDamage();
         foreach (int damage in totalDamageDone) {
-            Hurt(target, damage);
+            target.character.Hurt(damage);
         }
 
         //visual feedback
         bui.DrawDamageText(totalDamageDone, target.gameObject.transform.position);
-        bui.UpdateHealthBar(target);
+        bui.UpdateHealthBar(target.character);
 
         ba.Attack(attacker.gameObject);
         ba.Hurt(target.gameObject);
@@ -144,8 +141,5 @@ public class BattleActionsManager : MonoBehaviour
                 ba.FinishAttack(attacker.gameObject);
             }
         }
-        
-        yield return null;
     }
-
 }

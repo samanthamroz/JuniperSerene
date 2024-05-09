@@ -10,20 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 300cd2d5f9430794881b79ba3a622f11, type: 3}
-  m_Name: _debug_Moogle
+  m_Name: Patches
   m_EditorClassIdentifier: 
-  maxHealth: 800
-  currentHealth: 800
-  currentVie: 800
+  maxHealth: 2000
+  currentHealth: 1968
+  currentVie: 1968
   weaponsList:
-  - {fileID: 11400000, guid: 26eae4b6e6753b649bb97083b657432a, type: 2}
+  - {fileID: 11400000, guid: 342cbf2bce45323439165aa235125f3e, type: 2}
+  - {fileID: 11400000, guid: 322bd8e2c386ece4fa0358f6aefb8412, type: 2}
   attacksList: []
   abilitiesList: []
-  isInFront: 0
+  isInFront: 1
   isPlayable: 0
-  name: Moogle
-  sprite: {fileID: 32538271, guid: 08333cefcc4061d4394d09ba9c6f9600, type: 3}
-  uiSprite: {fileID: 21300000, guid: 435ad2b427d4fbb47a9a419cf2f92564, type: 3}
+  name: Patches
+  sprite: {fileID: -1135717232, guid: 08333cefcc4061d4394d09ba9c6f9600, type: 3}
+  uiSprite: {fileID: 21300000, guid: 1d9515051505daf4ca7acaaafc97ec4a, type: 3}
   gameObject: {fileID: 0}
-  next: {fileID: 11400000, guid: 3f3ef37284d8ee643a06e0aab56b1f64, type: 2}
+  next: {fileID: 11400000, guid: e38149a63cded7d438e33d43e5940d03, type: 2}
   prev: {fileID: 11400000, guid: 3f3ef37284d8ee643a06e0aab56b1f64, type: 2}

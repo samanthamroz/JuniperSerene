@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30d80e97fe1fcc648824e382f2adca40, type: 3}
-  m_Name: _debug_DoubleLance
+  m_Script: {fileID: 11500000, guid: c5dd44f325e294f438b5fcc70d563ffb, type: 3}
+  m_Name: StaffAttackExample
   m_EditorClassIdentifier: 
-  name: Double Lance
-  damage: 88
-  weaponType: 5
-  hasAugment: 1
-  sprite: {fileID: 21300000, guid: e41ec3b7d6d60e640aaa85d19b19a9f7, type: 3}
+  displayName: Clobber
+  description: Attack all enemies with /weapon/
+  needsCharacterData: 0
+  weaponTypeNeeded: 4
+  targetNeeded: 3

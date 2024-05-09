@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c5dd44f325e294f438b5fcc70d563ffb, type: 3}
-  m_Name: _debug_SwordAttackExample 1
+  m_Name: SwordAttackExample
   m_EditorClassIdentifier: 
   displayName: Wild Slash
   description: Attack all enemies with /weapon/

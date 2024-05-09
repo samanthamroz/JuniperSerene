@@ -6,11 +6,10 @@ public class BattleAction : ScriptableObject
 {
     public string displayName, description;
     public bool needsCharacterData;
+    public bool targetsFriends = false;
     public WeaponType weaponTypeNeeded;
     public TargetType targetNeeded;
 }
-
-
 
 public enum TargetType {
     NONE, //no target needed

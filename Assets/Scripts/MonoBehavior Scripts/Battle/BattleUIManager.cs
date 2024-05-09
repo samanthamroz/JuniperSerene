@@ -15,34 +15,35 @@ public class BattleUIManager : MonoBehaviour
 {
     [SerializeField] private GameObject overlayCanvas, currentTurnContainer, nextTurnContainer, healthBarsContainer, actionMenuButtonsContainer, tabInformationContainer;
     [SerializeField] private GameObject characterImagePrefab, healthBarPrefab, damageTextPrefab, selectionPointerPrefab, textActionMenuButtonPrefab, imageActionMenuButtonPrefab;
-    private List<GameObject> pointerObjects = new List<GameObject>();
+    private List<GameObject> pointerObjects = new();
     [SerializeField] private TextMeshProUGUI actionText;
     [SerializeField] private Color buttonClearColor, buttonHighlightColor, buttonPressedColor, buttonLockedColor;
     private List<GameObject> currentTurnUI, nextTurnUI;
 
-    public void CreateNewTurnUI(List<Character> currentTurn, List<Character> nextTurn) {
+    public IEnumerator CreateNewTurnUI(List<CharacterCombatBehavior> currentTurn, List<CharacterCombatBehavior> nextTurn) {
         //Clear display
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("UI Image"))
         {
             Destroy(obj);
         }
-
+        yield return null;
+        
         //display current turn
         currentTurnUI = new List<GameObject>();
-        foreach (Character character in currentTurn) {
+        foreach (CharacterCombatBehavior characterObj in currentTurn) {
             GameObject curr;
             curr = Instantiate(characterImagePrefab, currentTurnContainer.transform.GetChild(1));
 
-            curr.GetComponent<Image>().sprite = character.uiSprite;
+            curr.GetComponent<Image>().sprite = characterObj.character.uiSprite;
             currentTurnUI.Add(curr);
         }
         
         nextTurnUI = new List<GameObject>();
-        foreach (Character character in nextTurn) {
+        foreach (CharacterCombatBehavior characterObj in nextTurn) {
             GameObject temp;
             temp = Instantiate(characterImagePrefab, nextTurnContainer.transform.GetChild(1));
 
-            temp.GetComponent<Image>().sprite = character.uiSprite;
+            temp.GetComponent<Image>().sprite = characterObj.character.uiSprite;
             nextTurnUI.Add(temp);
         }
 
@@ -58,15 +59,17 @@ public class BattleUIManager : MonoBehaviour
             nextTurnContainer.GetComponent<GridLayoutGroup>().cellSize = new Vector2(100,100);
         }
     }
-    public void RemoveFromCurrentTurnUIAt(int index) {
+    public IEnumerator RemoveFromCurrentTurnUIAt(int index) {
         Destroy(currentTurnUI[index]);
+        yield return null;
         currentTurnUI.RemoveAt(index);
     }
     public void RemoveFromFrontOfCurrentTurnUI() {
-        RemoveFromCurrentTurnUIAt(0);
+        StartCoroutine(RemoveFromCurrentTurnUIAt(0));
     }
-    public void RemoveFromNextTurnUIAt(int index) {
+    public IEnumerator RemoveFromNextTurnUIAt(int index) {
         Destroy(nextTurnUI[index]);
+        yield return null;
         nextTurnUI.RemoveAt(index);
     }
 
@@ -98,7 +101,7 @@ public class BattleUIManager : MonoBehaviour
     public void DisableActionMenu() {
         actionMenuButtonsContainer.transform.parent.gameObject.SetActive(false);
     }
-    public void DrawNewActionMenu(List<BattleAction> actions, Character character, bool isBaseMenu) {
+    public IEnumerator DrawNewActionMenu(List<BattleAction> actions, CharacterCombatBehavior curr, bool isBaseMenu) {
         //Destroy all existing buttons (except basic button container)
         for (int i = actionMenuButtonsContainer.transform.childCount - 1; i >= 1; i--) {
             Destroy(actionMenuButtonsContainer.transform.GetChild(i).gameObject);
@@ -107,15 +110,16 @@ public class BattleUIManager : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+        yield return null;
 
         if (!isBaseMenu) {
-            DrawNonBaseActionMenu(actions, character);
-            return;
+            DrawNonBaseActionMenu(actions, curr);
+            yield break;
         }
 
-        List<GameObject> buttonObjects = new List<GameObject>();
-        List<BattleAction> basicAttackActions = new List<BattleAction>();
-        List<BattleAction> otherActions = new List<BattleAction>();
+        List<GameObject> buttonObjects = new();
+        List<BattleAction> basicAttackActions = new();
+        List<BattleAction> otherActions = new();
         foreach (BattleAction ba in actions) {
             if (ba.displayName == "") {
                 basicAttackActions.Add(ba);
@@ -131,7 +135,7 @@ public class BattleUIManager : MonoBehaviour
         } else {
             GameObject basicButtonsContainer = actionMenuButtonsContainer.transform.GetChild(0).gameObject;
             basicButtonsContainer.GetComponent<Image>().color = Color.white;
-            foreach (Weapon weapon in character.weaponsList) {
+            foreach (Weapon weapon in curr.character.weaponsList) {
                 buttonObjects.Add(Instantiate(imageActionMenuButtonPrefab, basicButtonsContainer.transform));
                 buttonObjects[^1].GetComponent<ActionMenuButton>().associatedAction = basicAttackActions[0];
                 buttonObjects[^1].GetComponent<ActionMenuButton>().associatedWeapon = weapon;
@@ -148,35 +152,35 @@ public class BattleUIManager : MonoBehaviour
 
         //Make prev-next double-linked list
         DoubleLinkedListHelper(buttonObjects);
-        for (int i = 0; i < character.weaponsList.Count; i++) {
+        for (int i = 0; i < curr.character.weaponsList.Count; i++) {
             buttonObjects[i].GetComponent<ActionMenuButton>().prev = buttonObjects[i];
-            buttonObjects[i].GetComponent<ActionMenuButton>().next = buttonObjects[character.weaponsList.Count];
+            buttonObjects[i].GetComponent<ActionMenuButton>().next = buttonObjects[curr.character.weaponsList.Count];
         }
 
         //Make the left-right double-linked list
-        if (character.weaponsList.Count > 0) {
+        if (curr.character.weaponsList.Count > 0) {
             buttonObjects[0].GetComponent<ActionMenuButton>().left = buttonObjects[0];
-            if (character.weaponsList.Count == 2) {
+            if (curr.character.weaponsList.Count == 2) {
                 buttonObjects[0].GetComponent<ActionMenuButton>().right = buttonObjects[1];
                 buttonObjects[1].GetComponent<ActionMenuButton>().left = buttonObjects[0];
             } else {
-                for (int i = 1; i < character.weaponsList.Count - 1; i++) {
+                for (int i = 1; i < curr.character.weaponsList.Count - 1; i++) {
                     buttonObjects[i - 1].GetComponent<ActionMenuButton>().right = buttonObjects[i];
                     buttonObjects[i].GetComponent<ActionMenuButton>().left = buttonObjects[i - 1];
                     buttonObjects[i].GetComponent<ActionMenuButton>().right = buttonObjects[i + 1];
                     buttonObjects[i + 1].GetComponent<ActionMenuButton>().left = buttonObjects[i];
                 }
             }
-            buttonObjects[character.weaponsList.Count - 1].GetComponent<ActionMenuButton>().right = buttonObjects[character.weaponsList.Count - 1];
+            buttonObjects[curr.character.weaponsList.Count - 1].GetComponent<ActionMenuButton>().right = buttonObjects[curr.character.weaponsList.Count - 1];
         }
 
         //description text formatting
         foreach (GameObject button in buttonObjects) {
-            DescriptionFormattingHelper(character, button);
+            DescriptionFormattingHelper(curr, button);
         }
     }
-    private void DrawNonBaseActionMenu(List<BattleAction> actions, Character character) {
-        List<GameObject> buttonObjects = new List<GameObject>();
+    private void DrawNonBaseActionMenu(List<BattleAction> actions, CharacterCombatBehavior curr) {
+        List<GameObject> buttonObjects = new();
         //gameObject.GetComponent<Image>().color = Color.grey;
         actionMenuButtonsContainer.transform.GetChild(0).gameObject.SetActive(false);
 
@@ -186,7 +190,7 @@ public class BattleUIManager : MonoBehaviour
             buttonObjects[^1].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = action.displayName;
             buttonObjects[^1].GetComponent<ActionMenuButton>().associatedAction = action;
             if (action.weaponTypeNeeded != WeaponType.NONE) {
-                foreach (Weapon weapon in character.weaponsList) {
+                foreach (Weapon weapon in curr.character.weaponsList) {
                     if (weapon.weaponType == action.weaponTypeNeeded) {
                         buttonObjects[^1].GetComponent<ActionMenuButton>().associatedWeapon = weapon;
                     }
@@ -199,7 +203,7 @@ public class BattleUIManager : MonoBehaviour
 
         //description text formatting
         foreach (GameObject button in buttonObjects) {
-            DescriptionFormattingHelper(character, button);
+            DescriptionFormattingHelper(curr, button);
         }
     }
     private void DoubleLinkedListHelper(List<GameObject> buttonObjects) {
@@ -217,15 +221,23 @@ public class BattleUIManager : MonoBehaviour
         }
         buttonObjects[^1].GetComponent<ActionMenuButton>().next = buttonObjects[^1];
     }
-    private void DescriptionFormattingHelper(Character character, GameObject button) {
+    private void DescriptionFormattingHelper(CharacterCombatBehavior character, GameObject button) {
+        static string AppendMoveText(string str) {
+            str = char.ToLower(str[0]).ToString() + str[1..];
+            return "Move to front and " + str;
+        }
+
         BattleAction associatedAction = button.GetComponent<ActionMenuButton>().associatedAction;
         string associatedDescription = button.GetComponent<ActionMenuButton>().associatedAction.description;
         if (associatedAction.needsCharacterData) {
-            associatedDescription = associatedDescription.Replace("/character/", character.name);
-            associatedDescription = associatedDescription.Replace("/role/", character.role);
+            associatedDescription = associatedDescription.Replace("/character/", character.character.name);
+            associatedDescription = associatedDescription.Replace("/role/", character.character.role);
         }
         if (associatedAction.weaponTypeNeeded != WeaponType.NONE) {
             associatedDescription = associatedDescription.Replace("/weapon/", button.GetComponent<ActionMenuButton>().associatedWeapon.name);
+            if (!character.isInFront) {
+                associatedDescription = AppendMoveText(associatedDescription);
+            }
         }
         button.GetComponent<ActionMenuButton>().associatedDescription = associatedDescription;
     }

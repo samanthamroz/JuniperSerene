@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aeadfd37af8b4df4e999f97d1b001879, type: 3}
-  m_Name: _debug_ShellDagger
+  m_Script: {fileID: 11500000, guid: 30d80e97fe1fcc648824e382f2adca40, type: 3}
+  m_Name: Double Lance
   m_EditorClassIdentifier: 
-  name: Shell Dagger
-  damage: 69
-  weaponType: 3
-  hasAugment: 0
-  sprite: {fileID: 21300000, guid: c12b29cba15c1b64ebf00469985a9fe0, type: 3}
+  name: Double Lance
+  damage: 88
+  weaponType: 5
+  hasAugment: 1
+  sprite: {fileID: 21300000, guid: e41ec3b7d6d60e640aaa85d19b19a9f7, type: 3}
