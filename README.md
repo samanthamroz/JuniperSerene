@@ -24,6 +24,7 @@ A turn-based, character-focused RPG set in a diverse world full of dryads, faeri
 * Placeholder character art: [@ahruon on Tumblr](https://ahruon.tumblr.com/)
 * Placeholder weapon sprites: [@RavenTale on Itch](https://itch.io/profile/raventale)
 * Placeholder background: [Artist unknown](https://www.reddit.com/r/PokemonRMXP/comments/v7hz6t/how_can_i_make_custom_battle_backgrounds/)
+* Fonts: [royzera](https://www.dafont.com/times-sans-serif.font), [AlitDesign](https://www.dafont.com/rosehot.font), [Rmdndsign](https://www.dafont.com/borcha.font), [117Studio](https://www.dafont.com/against-2.font), [Gilangs](https://www.dafont.com/plante.font) 
 
 ## Authors
 
