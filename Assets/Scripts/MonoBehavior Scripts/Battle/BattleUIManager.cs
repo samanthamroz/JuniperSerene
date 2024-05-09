@@ -13,7 +13,7 @@ public enum ButtonState {
 
 public class BattleUIManager : MonoBehaviour
 {
-    [SerializeField] private GameObject overlayCanvas, currentTurnContainer, nextTurnContainer, healthBarsContainer, actionMenuButtonsContainer, tabInformationContainer;
+    [SerializeField] private GameObject overlayCanvas, currentTurnContainer, nextTurnContainer, healthBarsContainer, actionMenuButtonsContainer, tabInformationContainer, controlsTextContainer;
     [SerializeField] private GameObject characterImagePrefab, healthBarPrefab, damageTextPrefab, selectionPointerPrefab, textActionMenuButtonPrefab, imageActionMenuButtonPrefab;
     private List<GameObject> pointerObjects = new();
     [SerializeField] private TextMeshProUGUI actionText;
@@ -94,6 +94,8 @@ public class BattleUIManager : MonoBehaviour
             }
         }
     }
+
+    
 
     public void EnableActionMenu() {
         actionMenuButtonsContainer.transform.parent.gameObject.SetActive(true);
@@ -340,8 +342,10 @@ public class BattleUIManager : MonoBehaviour
     {
         if (tabInformationContainer.activeSelf) {
             tabInformationContainer.SetActive(false);
+            controlsTextContainer.SetActive(false);
         } else {
             tabInformationContainer.SetActive(true);
+            controlsTextContainer.SetActive(true);
             UpdateTab(selectedAction);
         }
     }

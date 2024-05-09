@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
-using Unity.VisualScripting;
 
 public class BattleController : MonoBehaviour
 {
@@ -33,8 +31,6 @@ public class BattleController : MonoBehaviour
         isControllerActive = false;
     }
     public void RestartController(bool usePreviousAction, bool clearPreviousActions) {
-        Debug.Log("At restart, size = " +previousActionStack.Size());
-
         if (clearPreviousActions) {
             usePreviousAction = false;
             previousActionStack.Clear();
@@ -76,8 +72,6 @@ public class BattleController : MonoBehaviour
        
         bui.SetButtonColor(selectedActionButton.gameObject, ButtonState.HIGHLIGHTED);
         bui.UpdateTab(selectedActionButton.gameObject);
-
-        Debug.Log("After choose top action, size = " + previousActionStack.Size());
     }
     private IEnumerator ChoosePreviousSelectedAction() {
         yield return null;
@@ -118,8 +112,6 @@ public class BattleController : MonoBehaviour
         
         bui.SetButtonColor(selectedActionButton.gameObject, ButtonState.HIGHLIGHTED);
         bui.UpdateTab(selectedActionButton.gameObject);
-
-        Debug.Log("After choose previous action, size = " + previousActionStack.Size());
     }
     
     //NAVIGATE
@@ -193,7 +185,6 @@ public class BattleController : MonoBehaviour
         }
 
         previousActionStack.Push(currAction);
-        Debug.Log("After submit, size = " + previousActionStack.Size());
 
         if (isInActionMenu) {
             SubmitAction();
@@ -215,6 +206,8 @@ public class BattleController : MonoBehaviour
                 }
             }
             bui.DrawSelectionPointer(selectedActionMainTarget.gameObject.transform.position, true);
+
+            bui.SetButtonColor(selectedActionButton.gameObject, ButtonState.PRESSED);
 
             isInActionMenu = false;
         }
@@ -239,7 +232,6 @@ public class BattleController : MonoBehaviour
             return;
         }
 
-        Debug.Log("Before cancel, size = " + previousActionStack.Size());
         StartCoroutine(bui.RemoveAllSelectionPointers());
 
         if (previousActionStack.IsEmpty()) {

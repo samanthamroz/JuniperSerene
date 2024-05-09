@@ -100,7 +100,7 @@ public class BattleActionsManager : MonoBehaviour
         bui.ChangeActionText(action.displayName);
         switch (action.displayName) {
             case "":
-                bui.ChangeActionText("Basic");
+                bui.ChangeActionText("Attack");
                 StartCoroutine(BasicAttack(attacker, target, weapon));
                 return true;
             default:
