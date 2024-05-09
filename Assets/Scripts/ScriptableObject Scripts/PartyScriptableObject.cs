@@ -17,7 +17,7 @@ public class Party : ScriptableObject
 
     public List<Character> RemoveDeadCharacters() {
         List<Character> deadCharacters = new();
-        for (int i = partyCharacters.Count; i >= 0; i--) {
+        for (int i = partyCharacters.Count - 1; i >= 0; i--) {
             if (partyCharacters[i].currentVie <= 0) {
                 deadCharacters.Add(partyCharacters[i]);
                 partyCharacters.RemoveAt(i);

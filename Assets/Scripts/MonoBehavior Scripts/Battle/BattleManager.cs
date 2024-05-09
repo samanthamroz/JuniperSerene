@@ -175,8 +175,9 @@ public class BattleManager : MonoBehaviour
     private void StartNextAction() {
         //Write stuff into menu if character is playable, else disable menu and choose enemy action
         if (!curr.character.isPlayable) {
-            bui.DisableActionMenu();
             bc.StopController();
+            bui.DisableActionMenu();
+            
             Invoke(nameof(DoEnemyAction), ba.TurnStart(curr.gameObject));
         } else {
             //write options into menu
@@ -205,8 +206,7 @@ public class BattleManager : MonoBehaviour
             }
         }
 
-        //check for dead enemies
-        HandleDeadEnemies();
+        StartCoroutine(HandleDeadEnemies());
 
         //check if either side has lost
         if (battleLostFlag) {
@@ -334,6 +334,7 @@ public class BattleManager : MonoBehaviour
     }
     
     public void DoAction(BattleAction action) {
+        bc.StopController();
         bui.DisableActionMenu();
 
         if (bam.IsPerformActionSuccessful(action, curr)) {
@@ -344,6 +345,7 @@ public class BattleManager : MonoBehaviour
         ContinueCurrAction();
     }
     public void DoAction(BattleAction action, CharacterCombatBehavior target) {
+        bc.StopController();
         bui.DisableActionMenu();
 
         if (bam.IsPerformActionSuccessful(action, curr, target)) {
@@ -354,6 +356,7 @@ public class BattleManager : MonoBehaviour
         ContinueCurrAction();
     }
     public void DoAction(BattleAction action, CharacterCombatBehavior target, Weapon weapon) {
+        bc.StopController();
         bui.DisableActionMenu();
 
         if (bam.IsPerformActionSuccessful(action, curr, target, weapon)) {
@@ -364,6 +367,7 @@ public class BattleManager : MonoBehaviour
         ContinueCurrAction();
     }
     public void DoAction(BattleAction action, List<CharacterCombatBehavior> targets, Weapon weapon) {
+        bc.StopController();
         bui.DisableActionMenu();
 
         if (bam.IsPerformActionSuccessful(action, curr, targets, weapon)) {
