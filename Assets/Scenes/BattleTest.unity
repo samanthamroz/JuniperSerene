@@ -2355,12 +2355,14 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Arrows/WASD - Navigate
 
-    Enter - Select
+    Enter/F - Select
 
-    Backspace - Cancel
+    Backspace/ESC - Cancel
 
     TAB
-    - Toggle Info'
+    - Toggle Info
+
+    Shift/E - Toggle Dialogue'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e1eddb558efcd484895838cc0c7cc2ee, type: 2}
   m_sharedMaterial: {fileID: 8994164009234252278, guid: e1eddb558efcd484895838cc0c7cc2ee, type: 2}

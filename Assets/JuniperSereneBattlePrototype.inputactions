@@ -40,6 +40,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Dialogue",
+                    "type": "Button",
+                    "id": "fe7f1c48-504f-4706-8c08-4b7e10afd857",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -155,6 +164,17 @@
                 },
                 {
                     "name": "",
+                    "id": "00822bdf-5369-4d12-870c-db7650bee1c9",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "c48c3519-fcd2-4c1d-a6d4-3e83af05b760",
                     "path": "<Keyboard>/backspace",
                     "interactions": "",
@@ -188,12 +208,23 @@
                 },
                 {
                     "name": "",
-                    "id": "c5a16aa6-0300-4e1d-9ee2-08598a380b9e",
-                    "path": "<Keyboard>/space",
+                    "id": "655ec0cd-199e-4509-b16a-d72ed6f8f12f",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Tab",
+                    "action": "Dialogue",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2b4c40ef-eb68-4b02-bb9e-f437c612fee8",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dialogue",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
