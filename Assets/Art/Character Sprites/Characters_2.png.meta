@@ -358,27 +358,6 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
-    - serializedVersion: 2
-      name: tumblr_osqjcuIMyM1riuctjo1_500_0
-      rect:
-        serializedVersion: 2
-        x: 494
-        y: 152
-        width: 6
-        height: 132
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f1ac9772df071044bb07bc050d41ad78
-      internalID: 187195289
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
     outline: []
     physicsShape: []
     bones: []
