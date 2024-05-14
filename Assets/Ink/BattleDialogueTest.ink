@@ -28,6 +28,7 @@ Reina: *Jaia*, traveler. What can we do for ya?
             Maliya: Huh? Collectors would buy them for 90 each— 
             Reina: Let's just say 100 rings for the pair! What do you say? -> REINA_BATTLE
     ** [Oh, sorry, we're not interested.] -> DONE
+    
 *   [Just passing by] -> DONE
 
 === REINA_BATTLE ===
