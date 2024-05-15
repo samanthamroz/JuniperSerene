@@ -18,7 +18,7 @@ A turn-based, character-focused RPG set in a diverse world full of dryads, faeri
 ## Built With
 
 * Main Engine: Unity (editor version 2022.3.5f1)
-* Dialogue: [Ink](https://github.com/inkle/ink/tree/master))
+* Dialogue: [Ink](https://github.com/inkle/ink/tree/master)
 
 ## Contributions
 
