@@ -30,7 +30,7 @@ public class GamespaceController : MonoBehaviour
             moveToPosition.Add(character.localPosition);
         }
 
-        gameObject.GetComponent<PlayerInput>().camera.transform.position = new Vector3(partyCharacters[0].position.x, partyCharacters[0].position.y + 1, partyCharacters[0].position.z - 2);
+        gameObject.GetComponent<PlayerInput>().camera.transform.position = new Vector3(partyCharacters[0].position.x, partyCharacters[0].position.y + 1f, partyCharacters[0].position.z - 2);
     }
     private void OnMove(InputValue value)
     {
@@ -52,7 +52,7 @@ public class GamespaceController : MonoBehaviour
 
             partyCharacters[0].Translate(movementSpeed * Time.deltaTime * new Vector3(movementInput.x, 0, movementInput.y));
             Vector3 leadPosition = partyCharacters[0].position;
-            gameObject.GetComponent<PlayerInput>().camera.transform.position = new Vector3(leadPosition.x, leadPosition.y + 1, leadPosition.z - 2);
+            gameObject.GetComponent<PlayerInput>().camera.transform.position = new Vector3(leadPosition.x, leadPosition.y + 1f, leadPosition.z - 2);
         }
 
         moveToPosition.Add(partyCharacters[0].localPosition);
