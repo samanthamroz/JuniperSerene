@@ -3,17 +3,17 @@ using UnityEngine;
 
 public class CharacterCollisionBehavior : MonoBehaviour
 {
-    void OnCollisionEnter(Collision other)
+    void OnTriggerEnter(Collider other)
     {
-        if (!other.gameObject.CompareTag("Ignore in Collision Calculations")) {
-            SendMessageUpwards("OnCollisionHit", true);
+        if (other.gameObject.CompareTag("NPC")) {
+            SendMessageUpwards("TriggerHit", other.gameObject);
         }
     }
-
-    void OnCollisionExit(Collision other)
+    
+    void OnTriggerExit(Collider other)
     {
-        if (!other.gameObject.CompareTag("Ignore in Collision Calculations")) {
-            SendMessageUpwards("OnCollisionHit", false);
+        if (other.gameObject.CompareTag("NPC")) {
+            SendMessageUpwards("TriggerExit", other.gameObject);
         }
     }
 }
