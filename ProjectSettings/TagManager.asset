@@ -7,7 +7,7 @@ TagManager:
   - NPC
   - PC
   - UI Image
-  - Collider Impedes Movement
+  - Ignore in Collision Calculations
   layers:
   - Default
   - TransparentFX

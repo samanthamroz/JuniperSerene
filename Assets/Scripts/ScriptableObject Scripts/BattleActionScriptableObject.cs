@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEditor;
+//using UnityEditor;
 
 [CreateAssetMenu(fileName = "BattleActionScriptableObject", menuName = "ScriptableObjects/BattleAction")]
 public class BattleAction : ScriptableObject
@@ -24,7 +24,7 @@ public enum TargetType {
     ALL //hits all characters in the battle
 }
 
-
+/*
 [CustomEditor(typeof(BattleAction))]
 public class BattleActionEditor : Editor
 {
@@ -37,3 +37,4 @@ public class BattleActionEditor : Editor
         battleAction.description = EditorGUILayout.TextArea(battleAction.description, GUILayout.Height(100));
     }
 }
+*/
