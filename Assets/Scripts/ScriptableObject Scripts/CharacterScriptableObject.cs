@@ -13,7 +13,7 @@ public class Character : ScriptableObject
     public List<BattleAction> abilitiesList;
     
     //BATTLE POSITIONING
-    public bool isPlayable;
+    public bool isPlayable = true;
 
     //BATTLE DISPLAY PROPERTIES
     public new string name;

@@ -2,8 +2,8 @@
 
 === REINA_HUB ===
 
-Reina: *Jaia*, traveler. What can we do for ya?
-
+NAME: *Jaia*, traveler. 
+NAME: What can we do for ya?
 *   [Are you... treasure hunters?]
     Reina: How dare you! We are travelling collectors — antiquarians, if you will!
     Maliya: We're treasure hunters.

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b709afc4bc76bc14a9c334202cd00dd1, type: 3}
+  m_Name: Maliya
+  m_EditorClassIdentifier: 
+  maxHealth: 1600
+  currentHealth: 1600
+  currentVie: 1600
+  weaponsList: []
+  attacksList: []
+  abilitiesList: []
+  isPlayable: 0
+  name: Maliya
+  role: 
+  sprite: {fileID: 343488073, guid: c40cdb33166f42841be967c8b28135c8, type: 3}
+  uiSprite: {fileID: 21300000, guid: fe6694d17e43b104eadef377c196adf1, type: 3}
+  interactionActionJSON: {fileID: 4900000, guid: e312e9ba3219dc645bf21d747fe45333, type: 3}

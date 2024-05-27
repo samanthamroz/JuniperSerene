@@ -1750,6 +1750,7 @@ GameObject:
   - component: {fileID: 863077202}
   - component: {fileID: 863077204}
   - component: {fileID: 863077203}
+  - component: {fileID: 863077205}
   m_Layer: 0
   m_Name: Player Party
   m_TagString: Untagged
@@ -1897,6 +1898,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   indicatorPrefab: {fileID: 947283195099669547, guid: 81e1f24c28a5acf4c86d322ce5ac0196, type: 3}
+  inkJSONAsset: {fileID: 4900000, guid: e312e9ba3219dc645bf21d747fe45333, type: 3}
+  dialogueText: {fileID: 184426967}
+  speakerText: {fileID: 1035234918}
+--- !u!114 &863077205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 863077200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6374fccd14336244ca4d9eaea53324ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1020058421
 GameObject:
   m_ObjectHideFlags: 0
@@ -2953,7 +2969,7 @@ PrefabInstance:
     - target: {fileID: 7665497670783532843, guid: a5fc8c8a2954ae74a89ab46ebc59de4f, type: 3}
       propertyPath: character
       value: 
-      objectReference: {fileID: 11400000, guid: cbea704980c84f349bf8b2cb758641ec, type: 2}
+      objectReference: {fileID: 11400000, guid: 20ffaad86e4c5454a8166d26e6ade02e, type: 2}
     - target: {fileID: 7681474460374932971, guid: a5fc8c8a2954ae74a89ab46ebc59de4f, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -3311,7 +3327,7 @@ PrefabInstance:
     - target: {fileID: 7665497670783532843, guid: a5fc8c8a2954ae74a89ab46ebc59de4f, type: 3}
       propertyPath: character
       value: 
-      objectReference: {fileID: 11400000, guid: cbea704980c84f349bf8b2cb758641ec, type: 2}
+      objectReference: {fileID: 11400000, guid: 0b1dd3467b52f5943842c91a3aef3515, type: 2}
     - target: {fileID: 7681474460374932971, guid: a5fc8c8a2954ae74a89ab46ebc59de4f, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -4802,7 +4818,7 @@ PrefabInstance:
     - target: {fileID: 7665497670783532843, guid: a5fc8c8a2954ae74a89ab46ebc59de4f, type: 3}
       propertyPath: character
       value: 
-      objectReference: {fileID: 11400000, guid: cbea704980c84f349bf8b2cb758641ec, type: 2}
+      objectReference: {fileID: 11400000, guid: 21f6fdbbf46ba9749a8b2947e7b944f6, type: 2}
     - target: {fileID: 7681474460374932971, guid: a5fc8c8a2954ae74a89ab46ebc59de4f, type: 3}
       propertyPath: m_Sprite
       value: 

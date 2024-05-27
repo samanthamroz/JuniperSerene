@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using Ink.Runtime;
+using TMPro;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -9,11 +10,12 @@ public class DialogueManager : MonoBehaviour
     private List<GameObject> otherSpeakers;
     private GameObject indicatorObj;
     private GameObject dialogueTarget { get { return indicatorObj.transform.parent.gameObject; } }
+	private Story currentStory;
+	[SerializeField] private TextMeshProUGUI dialogueText, speakerText;
 
     void Awake()
     {
         otherSpeakers = new();
-        StartStory();
     }
 
     void TriggerHit(GameObject other) { //Message called by children
@@ -48,38 +50,38 @@ public class DialogueManager : MonoBehaviour
     }
 
     //===============================================================================================
-
-    public static event Action<Story> OnCreateStory;
-	[SerializeField] private TextAsset inkJSONAsset = null;
-	public Story story;
-	[SerializeField] private Canvas canvas = null;
-
-	// Creates a new Story object with the compiled story which we can then play!
-	void StartStory () {
-		story = new Story (inkJSONAsset.text);
-        if (OnCreateStory != null) {
-            OnCreateStory(story);
-        } 
-		RefreshView();
-	}
 	
+	void OnInteract() {
+		if (dialogueTarget == null) {
+			return;
+		}
+		
+		if (currentStory == null) {
+			NonPlayableChracter npc = dialogueTarget.GetComponent<CharacterBattleBehavior>().character as NonPlayableChracter;
+			currentStory = npc.interactionDialogue;
+		}
+
+		string text = currentStory.Continue();
+		text = text.Trim();
+
+		CreateContentView(text);
+	}
+
 	// This is the main function called every time the story changes. It does a few things:
 	// Destroys all the old content and choices.
 	// Continues over all the lines of text, then displays all the choices. If there are no choices, the story is finished!
 	void RefreshView () {
-		// Remove all the UI on screen
-		RemoveChildren ();
-		
 		// Read all the content until we can't continue any more
-		while (story.canContinue) {
+		while (currentStory.canContinue) {
 			// Continue gets the next line of the story
-			string text = story.Continue ();
+			string text = currentStory.Continue ();
 			// This removes any white space from the text.
 			text = text.Trim();
 			// Display the text on screen!
 			CreateContentView(text);
 		}
 
+		/*
 		// Display all the choices, if there are any!
 		if(story.currentChoices.Count > 0) {
 			for (int i = 0; i < story.currentChoices.Count; i++) {
@@ -98,21 +100,22 @@ public class DialogueManager : MonoBehaviour
 				StartStory();
 			});
 		}
+		*/
 	}
 
+	/*
 	// When we click the choice button, tell the story to choose that choice!
 	void OnClickChoiceButton (Choice choice) {
 		story.ChooseChoiceIndex (choice.index);
 		RefreshView();
 	}
-
+	*/
 	// Creates a textbox showing the the line of text
 	void CreateContentView (string text) {
-		Text storyText = Instantiate (textPrefab) as Text;
-		storyText.text = text;
-		storyText.transform.SetParent (canvas.transform, false);
+		dialogueText.text = text;
 	}
 
+	/*
 	// Creates a button showing the choice text
 	Button CreateChoiceView (string text) {
 		// Creates the button from a prefab
@@ -129,14 +132,5 @@ public class DialogueManager : MonoBehaviour
 
 		return choice;
 	}
-
-	// Destroys all the children of this gameobject (all the UI)
-	void RemoveChildren () {
-		int childCount = canvas.transform.childCount;
-		for (int i = childCount - 1; i >= 0; --i) {
-			Destroy (canvas.transform.GetChild (i).gameObject);
-		}
-	}
-
-	
+	*/
 }
