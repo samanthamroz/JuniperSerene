@@ -31,14 +31,14 @@ public class BattleManager : MonoBehaviour
     private BattleActionsManager bam;
     private BattleUIManager bui;
     private BattleAnimations ba;
-    private BattleController bc;
+    private UIController bc;
 
     void Awake()
     {
         bam = gameObject.GetComponent<BattleActionsManager>();
         bui = gameObject.GetComponent<BattleUIManager>();
         ba = gameObject.GetComponent<BattleAnimations>();
-        bc = gameObject.GetComponent<BattleController>();
+        bc = gameObject.GetComponent<UIController>();
     }
 
     /*
@@ -315,10 +315,10 @@ public class BattleManager : MonoBehaviour
             currBattleActions.RemoveAt(currBattleActions.Count - 2); //remove Retreat
         }
 
-        StartCoroutine(bui.DrawNewActionMenu(currBattleActions, curr, true));
+        StartCoroutine(bui.DrawNewActionMenu(currBattleActions, curr, ActionMenuType.BASE));
     }
     private void CreateBattleSubMenu() {
-        StartCoroutine(bui.DrawNewActionMenu(currBattleActions, curr, false));
+        StartCoroutine(bui.DrawNewActionMenu(currBattleActions, curr, ActionMenuType.SUB));
     }
 
     /*

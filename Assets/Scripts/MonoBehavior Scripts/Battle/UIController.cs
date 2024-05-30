@@ -4,7 +4,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class BattleController : MonoBehaviour
+public class UIController : MonoBehaviour
 {
     private BattleManager bm;
     private BattleUIManager bui;
@@ -57,12 +57,14 @@ public class BattleController : MonoBehaviour
         }
         
         //search for top button in menu
+        selectedActionButton = actionMenuButtonsContainer.transform.GetChild(0).GetComponent<ActionMenuButton>();
         if (actionMenuButtonsContainer.transform.GetChild(0).childCount > 0) {
             selectedActionButton = actionMenuButtonsContainer.transform.GetChild(0).GetChild(0).gameObject.GetComponent<ActionMenuButton>();
         } else {
             for (int i = 0; i < actionMenuButtonsContainer.transform.childCount; i++) {
                 if (selectedActionButton == null) {
                     actionMenuButtonsContainer.transform.GetChild(i).gameObject.TryGetComponent<ActionMenuButton>(out selectedActionButton);
+                    actionMenuButtonsContainer.transform.GetChild(i).gameObject.TryGetComponent<DialogueMenuButton>(out selectedActionButton);
                 }
             }
             if (selectedActionButton == null) {

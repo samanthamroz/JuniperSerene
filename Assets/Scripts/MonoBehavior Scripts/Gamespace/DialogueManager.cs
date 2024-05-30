@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using System;
 using UnityEngine;
 using Ink.Runtime;
 using TMPro;
+using UnityEngine.InputSystem;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -56,15 +56,38 @@ public class DialogueManager : MonoBehaviour
 			return;
 		}
 		
+		//if this is start of a new story interaction, get the new story
 		if (currentStory == null) {
 			NonPlayableChracter npc = dialogueTarget.GetComponent<CharacterBattleBehavior>().character as NonPlayableChracter;
 			currentStory = npc.interactionDialogue;
 		}
 
-		string text = currentStory.Continue();
-		text = text.Trim();
+		//if this is the end of the story interaction, do nothing
+		if (!currentStory.canContinue) {
+			return;
+		}
 
+		GetComponent<PlayerInput>().SwitchCurrentActionMap("Battle");
+		OnSubmit();
+		GetComponent<UIController>().RestartController(false, true);
+	}
+
+	void OnSubmit() {
+		//write next line of dialogue
+		string text = currentStory.Continue().Trim();
 		CreateContentView(text);
+
+		//check for updated choices
+		if (currentStory.currentChoices.Count > 0) {
+			StartCoroutine(GetComponent<BattleUIManager>().DrawNewDialogueActionMenu(currentStory.currentChoices));
+                //Choice choice = currentStory.currentChoices[i];
+                //Button button = CreateChoiceView (choice.text.Trim ());
+                // Tell the button what to do when we press it
+                //button.onClick.AddListener (delegate {
+                //	currentStory.ChooseChoiceIndex(choice.index);
+                //	RefreshView();
+                //});
+		}
 	}
 
 	// This is the main function called every time the story changes. It does a few things:
@@ -103,13 +126,12 @@ public class DialogueManager : MonoBehaviour
 		*/
 	}
 
-	/*
 	// When we click the choice button, tell the story to choose that choice!
 	void OnClickChoiceButton (Choice choice) {
-		story.ChooseChoiceIndex (choice.index);
+		currentStory.ChooseChoiceIndex(choice.index);
 		RefreshView();
 	}
-	*/
+	
 	// Creates a textbox showing the the line of text
 	void CreateContentView (string text) {
 		dialogueText.text = text;

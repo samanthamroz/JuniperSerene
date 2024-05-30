@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Ink.Runtime;
 
 public enum ButtonState {
     CLEAR,
@@ -11,10 +12,17 @@ public enum ButtonState {
     LOCKED
 }
 
+public enum ActionMenuType {
+    BASE,
+    SUB,
+    DIALOGUE
+}
+
+
 public class BattleUIManager : MonoBehaviour
 {
     [SerializeField] private GameObject overlayCanvas, currentTurnContainer, nextTurnContainer, healthBarsContainer, actionMenuButtonsContainer, tabInformationContainer, controlsTextContainer;
-    [SerializeField] private GameObject characterImagePrefab, healthBarPrefab, damageTextPrefab, selectionPointerPrefab, textActionMenuButtonPrefab, imageActionMenuButtonPrefab;
+    [SerializeField] private GameObject characterImagePrefab, healthBarPrefab, damageTextPrefab, selectionPointerPrefab, textActionMenuButtonPrefab, imageActionMenuButtonPrefab, dialogueActionMenuButtonPrefab;
     private List<GameObject> pointerObjects = new();
     [SerializeField] private TextMeshProUGUI actionText;
     [SerializeField] private Color buttonClearColor, buttonHighlightColor, buttonPressedColor, buttonLockedColor;
@@ -103,7 +111,7 @@ public class BattleUIManager : MonoBehaviour
     public void DisableActionMenu() {
         actionMenuButtonsContainer.transform.parent.gameObject.SetActive(false);
     }
-    public IEnumerator DrawNewActionMenu(List<BattleAction> actions, CharacterBattleBehavior curr, bool isBaseMenu) {
+    public IEnumerator DrawNewActionMenu(List<BattleAction> actions, CharacterBattleBehavior curr, ActionMenuType menuType) {
         //Destroy all existing buttons (except basic button container)
         for (int i = actionMenuButtonsContainer.transform.childCount - 1; i >= 1; i--) {
             Destroy(actionMenuButtonsContainer.transform.GetChild(i).gameObject);
@@ -114,7 +122,7 @@ public class BattleUIManager : MonoBehaviour
         }
         yield return null;
 
-        if (!isBaseMenu) {
+        if (menuType == ActionMenuType.SUB) {
             DrawNonBaseActionMenu(actions, curr);
             yield break;
         }
@@ -183,7 +191,6 @@ public class BattleUIManager : MonoBehaviour
     }
     private void DrawNonBaseActionMenu(List<BattleAction> actions, CharacterBattleBehavior curr) {
         List<GameObject> buttonObjects = new();
-        //gameObject.GetComponent<Image>().color = Color.grey;
         actionMenuButtonsContainer.transform.GetChild(0).gameObject.SetActive(false);
 
         //Make text buttons
@@ -207,6 +214,30 @@ public class BattleUIManager : MonoBehaviour
         foreach (GameObject button in buttonObjects) {
             DescriptionFormattingHelper(curr, button);
         }
+    }
+    public IEnumerator DrawNewDialogueActionMenu(List<Choice> choices) {
+        for (int i = actionMenuButtonsContainer.transform.childCount - 1; i >= 1; i--) {
+            Destroy(actionMenuButtonsContainer.transform.GetChild(i).gameObject);
+        }
+        foreach (Transform child in actionMenuButtonsContainer.transform.GetChild(0))
+        {
+            Destroy(child.gameObject);
+        }
+        yield return null;
+        
+        List<GameObject> buttonObjects = new();
+        actionMenuButtonsContainer.transform.GetChild(0).gameObject.SetActive(false);
+
+        //Make text buttons
+        foreach (Choice choice in choices) {
+            buttonObjects.Add(Instantiate(dialogueActionMenuButtonPrefab, actionMenuButtonsContainer.transform));
+            buttonObjects[^1].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = choice.text;
+            buttonObjects[^1].GetComponent<DialogueMenuButton>().associatedChoice = choice;
+            buttonObjects[^1].GetComponent<DialogueMenuButton>().associatedDescription = choice.text;
+        }
+
+        //Make prev-next double-linked list
+        DoubleLinkedListHelper(buttonObjects);
     }
     private void DoubleLinkedListHelper(List<GameObject> buttonObjects) {
         buttonObjects[0].GetComponent<ActionMenuButton>().prev = buttonObjects[0];
